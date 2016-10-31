@@ -1,6 +1,6 @@
 {
   "name": "fp-stylus",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Stylus extension for Fepper",
   "dependencies": {
     "gulp-stylus": "^2.4.0"
