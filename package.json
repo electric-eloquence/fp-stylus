@@ -2,6 +2,9 @@
   "name": "fp-stylus",
   "version": "0.0.1",
   "description": "Stylus extension for Fepper",
+  "dependencies": {
+    "gulp-stylus": "^2.4.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/electric-eloquence/fp-stylus.git"
@@ -9,8 +12,5 @@
   "license": "MIT",
   "engines": {
     "node": ">=4.0.0"
-  },
-  "devDependencies": {
-    "gulp-stylus": "^2.4.0"
   }
 }
