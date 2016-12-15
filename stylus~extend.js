@@ -6,11 +6,11 @@ const plugins = require('gulp-load-plugins')();
 const runSequence = require('run-sequence');
 
 const appDir = global.appDir;
-const utilsCore = require(`${appDir}/core/lib/utils`);
+const utils = require(`${appDir}/core/lib/utils`);
 const utilsTask = require(`${appDir}/tasker/utils`);
 
-const cssBldDir = utilsCore.pathResolve(conf.ui.paths.source.cssBld);
-const cssSrcDir = utilsCore.pathResolve(conf.ui.paths.source.cssSrc);
+const cssBldDir = utils.pathResolve(conf.ui.paths.source.cssBld);
+const cssSrcDir = utils.pathResolve(conf.ui.paths.source.cssSrc);
 
 gulp.task('stylus', function () {
   return gulp.src(cssSrcDir + '/stylus/*.styl')
