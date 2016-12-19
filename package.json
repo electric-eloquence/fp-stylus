@@ -2,9 +2,10 @@
   "name": "fp-stylus",
   "version": "0.0.5",
   "description": "Stylus extension for Fepper",
+  "main": "stylus~extend.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/electric-eloquence/fp-stylus.git"
+    "url": "git+https://github.com/electric-eloquence/fp-stylus.git"
   },
   "license": "MIT",
   "engines": {
