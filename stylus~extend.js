@@ -7,17 +7,21 @@ const runSequence = require('run-sequence');
 
 const appDir = global.appDir;
 const utils = require(`${appDir}/core/lib/utils`);
-const utilsTask = require(`${appDir}/tasker/utils`);
 
 const cssBldDir = utils.pathResolve(conf.ui.paths.source.cssBld);
 const cssSrcDir = utils.pathResolve(conf.ui.paths.source.cssSrc);
+
+function handleError(err) {
+  utils.error(err.toString());
+  this.emit('end');
+}
 
 gulp.task('stylus', function () {
   return gulp.src(cssSrcDir + '/stylus/*.styl')
     .pipe(plugins.stylus({
       linenos: true
     }))
-    .on('error', utilsTask.handleError)
+    .on('error', handleError)
     .pipe(gulp.dest(cssBldDir));
 });
 
@@ -28,7 +32,7 @@ gulp.task('stylus:no-comments', function () {
     .pipe(plugins.stylus({
       linenos: false
     }))
-    .on('error', utilsTask.handleError)
+    .on('error', handleError)
     .pipe(gulp.dest(cssBldDir));
 });
 
