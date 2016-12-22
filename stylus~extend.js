@@ -27,7 +27,7 @@ gulp.task('stylus', function () {
 
 // This runs the CSS processor without outputting line comments.
 // You probably want this to process CSS destined for production.
-gulp.task('stylus:no-comments', function () {
+gulp.task('stylus:no-comment', function () {
   return gulp.src(cssSrcDir + '/stylus/*.styl')
     .pipe(plugins.stylus({
       linenos: false
@@ -38,7 +38,7 @@ gulp.task('stylus:no-comments', function () {
 
 gulp.task('stylus:frontend-copy', function (cb) {
   runSequence(
-    'stylus:compile-no-comments',
+    'stylus:no-comment',
     'patternlab:copy-styles',
     cb
   );
