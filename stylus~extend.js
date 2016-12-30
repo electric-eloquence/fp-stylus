@@ -25,6 +25,8 @@ gulp.task('stylus', function () {
     .pipe(gulp.dest(cssBldDir));
 });
 
+gulp.task('stylus:once', ['stylus']);
+
 // This runs the CSS processor without outputting line comments.
 // You probably want this to process CSS destined for production.
 gulp.task('stylus:no-comment', function () {

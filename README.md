@@ -6,7 +6,7 @@ Add these tasks to `excludes/extend/custom.js`:
 * Under gulp task 'custom:frontend-copy'
   * 'stylus:frontend-copy'
 * Under gulp task 'custom:once'
-  * 'stylus'
+  * 'stylus:once'
 * Under gulp task 'custom:watch'
   * 'stylus:watch'
 
