@@ -1,11 +1,12 @@
 'use strict';
 
-const conf = global.conf;
 const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
 const runSequence = require('run-sequence');
 
+const conf = global.conf;
 const appDir = global.appDir;
+
 const utils = require(`${appDir}/core/lib/utils`);
 
 const cssBldDir = utils.pathResolve(conf.ui.paths.source.cssBld);
