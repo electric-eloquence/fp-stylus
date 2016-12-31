@@ -4,8 +4,8 @@ const gulp = require('gulp');
 const plugins = require('gulp-load-plugins')();
 const runSequence = require('run-sequence');
 
-const conf = global.conf;
 const appDir = global.appDir;
+const conf = global.conf;
 
 const utils = require(`${appDir}/core/lib/utils`);
 
