@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=4.0.0"
+    "node": ">=7.6.0"
   },
   "dependencies": {
     "gulp-stylus": "^2.4.0"
