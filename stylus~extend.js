@@ -42,7 +42,7 @@ gulp.task('stylus:no-comment', function () {
 gulp.task('stylus:frontend-copy', function (cb) {
   runSequence(
     'stylus:no-comment',
-    'patternlab:copy-styles',
+    'ui:copy-styles',
     cb
   );
 });
