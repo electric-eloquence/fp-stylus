@@ -13,5 +13,26 @@
   },
   "dependencies": {
     "gulp-stylus": "^2.4.0"
-  }
+  },
+  "keywords": [
+    "atomic",
+    "component",
+    "css",
+    "design",
+    "end",
+    "fepper",
+    "front",
+    "front-end",
+    "frontend",
+    "lab",
+    "library",
+    "pattern",
+    "pre-processor",
+    "preprocessor",
+    "prototype",
+    "prototyper",
+    "prototyping",
+    "stylus",
+    "template"
+  ]
 }
