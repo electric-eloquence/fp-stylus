@@ -7,13 +7,6 @@
     "type": "git",
     "url": "git+https://github.com/electric-eloquence/fp-stylus.git"
   },
-  "license": "MIT",
-  "engines": {
-    "node": ">=8.5.0"
-  },
-  "dependencies": {
-    "gulp-stylus": "^2.4.0"
-  },
   "keywords": [
     "atomic",
     "component",
@@ -34,5 +27,12 @@
     "prototyping",
     "stylus",
     "template"
-  ]
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.5.0"
+  },
+  "dependencies": {
+    "gulp-stylus": "^2.4.0"
+  }
 }
