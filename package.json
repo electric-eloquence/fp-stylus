@@ -29,6 +29,10 @@
     "template"
   ],
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/electric-eloquence/fp-stylus/issues"
+  },
+  "homepage": "https://github.com/electric-eloquence/fp-stylus#readme",
   "engines": {
     "node": ">=8.5.0"
   },
