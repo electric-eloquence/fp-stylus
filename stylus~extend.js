@@ -5,7 +5,6 @@ const plugins = require('gulp-load-plugins')();
 const runSequence = require('run-sequence');
 const utils = require('fepper-utils');
 
-const appDir = global.appDir;
 const conf = global.conf;
 
 const cssBldDir = conf.ui.paths.source.cssBld;
