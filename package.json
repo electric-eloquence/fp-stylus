@@ -38,6 +38,6 @@
   },
   "dependencies": {
     "fepper-utils": "^1.0.1",
-    "gulp-stylus": "^2.4.0"
+    "gulp-stylus": "^2.7.0"
   }
 }

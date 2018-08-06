@@ -1,8 +1,8 @@
 'use strict';
 
 const gulp = require('gulp');
-const plugins = require('gulp-load-plugins')();
 const runSequence = require('run-sequence');
+const stylus = require('gulp-stylus');
 const utils = require('fepper-utils');
 
 const conf = global.conf;
@@ -17,7 +17,7 @@ function handleError(err) {
 
 gulp.task('stylus', function () {
   return gulp.src(cssSrcDir + '/stylus/*.styl')
-    .pipe(plugins.stylus({
+    .pipe(stylus({
       linenos: true
     }))
     .on('error', handleError)
@@ -30,7 +30,7 @@ gulp.task('stylus:once', ['stylus']);
 // You probably want this to process CSS destined for production.
 gulp.task('stylus:no-comment', function () {
   return gulp.src(cssSrcDir + '/stylus/*.styl')
-    .pipe(plugins.stylus({
+    .pipe(stylus({
       linenos: false
     }))
     .on('error', handleError)
