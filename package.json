@@ -37,6 +37,7 @@
     "node": ">=8.5.0"
   },
   "dependencies": {
+    "fepper-utils": "^1.0.1",
     "gulp-stylus": "^2.4.0"
   }
 }
