@@ -16,4 +16,4 @@ comments. You probably want this to process CSS destined for production.
 
 In a full ([main](https://github.com/electric-eloquence/fepper)) Fepper 
 installation, there should already be a `source/_styles/src/stylus` directory. 
-Create one if it doesn't exist.
+Create one if there isn't and put all Stylus code there.
