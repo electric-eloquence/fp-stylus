@@ -46,5 +46,5 @@ gulp.task('stylus:frontend-copy', function (cb) {
 });
 
 gulp.task('stylus:watch', function () {
-  gulp.watch('stylus/**', {cwd: cssSrcDir}, ['stylus']);
+  gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus']);
 });
