@@ -37,11 +37,20 @@ function diffThenRender(commentBool, cb) {
   }
 
   if (hasComments) {
-    runSequence(
-      'stylus:tmp',
-      'stylus',
-      cb
-    );
+    if (commentBool) {
+      runSequence(
+        'stylus:write-tmp',
+        'stylus',
+        cb
+      );
+    }
+    else {
+      runSequence(
+        'stylus:write-tmp',
+        'stylus:no-comment',
+        cb
+      );
+    }
 
     return;
   }
@@ -122,12 +131,12 @@ function diffThenRender(commentBool, cb) {
                     .set('linenos', commentBool)
                     .render(
                       ((iteration1) => {
-                        return (err1, cssNewCommented) => {
+                        return (err1, cssNew1) => {
                           if (err1) {
                             utils.error(err1);
                           }
                           else {
-                            fs.outputFileSync(cssFileBld, cssNewCommented);
+                            fs.outputFileSync(cssFileBld, cssNew1);
                           }
 
                           if (iteration1 === 0) {
@@ -205,7 +214,7 @@ gulp.task('stylus:frontend-copy', function (cb) {
 gulp.task('stylus:once', ['stylus']);
 
 // This outputs tmp files without line comments to check for modifications to Stylus code.
-gulp.task('stylus:tmp', function () {
+gulp.task('stylus:write-tmp', function () {
   return gulp.src(cssSrcDir + '/stylus/*.styl')
     .pipe(gulpStylus({
       linenos: false
@@ -216,4 +225,8 @@ gulp.task('stylus:tmp', function () {
 
 gulp.task('stylus:watch', function () {
   gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus']);
+});
+
+gulp.task('stylus:watch-write-tmp', function () {
+  gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus:write-tmp', 'stylus']);
 });
