@@ -36,18 +36,19 @@ gulp.task('stylus', function () {
 // Stylus files, and for users who do edit Stylus files to have Stylus process as expected.
 // Power-users should replace this with the 'stylus:once' or 'stylus:no-comment' task for better performance.
 gulp.task('stylus:diff-then-comment', function (cb) {
-  const cssFilesOld = fs.readdirSync(cssBldDir);
+  const cssFilesBld = fs.readdirSync(cssBldDir);
   let hasComments = false;
+  let i = cssFilesBld.length;
 
-  for (let cssFileOld of cssFilesOld) {
-    const cssFileOldPath = `${cssBldDir}/${cssFileOld}`;
-    const stat = fs.statSync(cssFileOldPath);
+  while (i--) {
+    const cssFileBld = `${cssBldDir}/${cssFilesBld[i]}`;
+    const stat = fs.statSync(cssFileBld);
 
     if (!stat.isFile()) {
       continue;
     }
 
-    const cssOld = fs.readFileSync(cssFileOldPath, conf.enc);
+    const cssOld = fs.readFileSync(cssFileBld, conf.enc);
 
     hasComments = /^\/\* line \d+ : /m.test(cssOld) && /\.styl \*\/$/m.test(cssOld);
 
@@ -73,17 +74,27 @@ gulp.task('stylus:diff-then-comment', function (cb) {
 
   // Promise so we chdir back to global.rootDir at completion of async functions.
   new Promise((resolve) => {
-    for (let i = 0; i < stylFiles.length; i++) {
+    let i = stylFiles.length;
+
+    while (i--) {
       const stylFile = stylFiles[i];
       const stylFileObj = path.parse(stylFile);
 
       if (stylFileObj.ext !== '.styl') {
+        if (i === 0) {
+          resolve();
+        }
+
         continue;
       }
 
       const stat = fs.statSync(stylFile);
 
       if (!stat.isFile() && !stat.isSymbolicLink()) {
+        if (i === 0) {
+          resolve();
+        }
+
         continue;
       }
 
@@ -97,12 +108,38 @@ gulp.task('stylus:diff-then-comment', function (cb) {
             utils.error(err);
           }
           else {
-            const cssFileOldPath = `${cssBldDir}/${stylFileObj.name}.css`;
-            const stat = fs.statSync(cssFileOldPath);
+            // Declare tmp file for comparison.
+            const cssFileTmp = `${cssSrcDir}/${stylFileObj.name}.css`;
+            let cssFileTmpStr = '';
+
+            if (fs.existsSync(cssFileTmp)) {
+              cssFileTmpStr = fs.readFileSync(cssFileTmp, conf.enc);
+            }
+
+            // Compare newly rendered css with the contents of the tmp file.
+            // Exit if there has been no change. This is the case for users who only edit bld css and do not modify
+            // Stylus files.
+            if (cssFileTmpStr === cssNew) {
+              if (i === 0) {
+                resolve();
+              }
+
+              return;
+            }
+
+            // Output tmp file for future comparison.
+            fs.outputFileSync(cssFileTmp, cssNew);
+
+            // Now, compare against bld css.
+            const cssFileBld = `${cssBldDir}/${stylFileObj.name}.css`;
+            const stat = fs.statSync(cssFileBld);
 
             if (stat.isFile()) {
-              const cssOld = fs.readFileSync(cssFileOldPath, conf.enc);
+              const cssOld = fs.readFileSync(cssFileBld, conf.enc);
 
+              // The first time 'stylus:diff-then-comment' is run, cssNew should equal cssOld.
+              // cssFileTmp will have been written at this point and will be used for future comparisons.
+              // If users only edit bld css and do not modify Stylus files, they should never get to this point.
               if (cssNew !== cssOld) {
                 stylus(stylFileStr)
                   .set('filename', stylFile)
@@ -112,7 +149,7 @@ gulp.task('stylus:diff-then-comment', function (cb) {
                       utils.error(err1);
                     }
                     else {
-                      fs.outputFileSync(cssFileOldPath, cssNewCommented);
+                      fs.outputFileSync(cssFileBld, cssNewCommented);
                     }
 
                     if (i === stylFiles.length - 1) {
@@ -123,10 +160,14 @@ gulp.task('stylus:diff-then-comment', function (cb) {
             }
           }
 
-          if (i === stylFiles.length - 1) {
+          if (i === 0) {
             resolve();
           }
         });
+
+      if (i === 0) {
+        resolve();
+      }
     }
   })
   .then(() => {
