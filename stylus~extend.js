@@ -38,6 +38,7 @@ function diffThenRender(commentBool, cb) {
 
   if (hasComments) {
     runSequence(
+      'stylus:tmp',
       'stylus',
       cb
     );
@@ -202,6 +203,16 @@ gulp.task('stylus:frontend-copy', function (cb) {
 });
 
 gulp.task('stylus:once', ['stylus']);
+
+// This outputs tmp files without line comments to check for modifications to Stylus code.
+gulp.task('stylus:tmp', function () {
+  return gulp.src(cssSrcDir + '/stylus/*.styl')
+    .pipe(gulpStylus({
+      linenos: false
+    }))
+    .on('error', handleError)
+    .pipe(gulp.dest(cssSrcDir));
+});
 
 gulp.task('stylus:watch', function () {
   gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus']);
