@@ -94,7 +94,7 @@ function diffThenRender(commentBool, cb) {
             }
             else {
               // Declare tmp file for comparison.
-              const cssFileTmp = `${cssSrcDir}/${stylFileObj.name}.css`;
+              const cssFileTmp = `${cssSrcDir}/tmp/${stylFileObj.name}.css`;
               let cssFileTmpStr = '';
 
               if (fs.existsSync(cssFileTmp)) {
@@ -220,7 +220,7 @@ gulp.task('stylus:write-tmp', function () {
       linenos: false
     }))
     .on('error', handleError)
-    .pipe(gulp.dest(cssSrcDir));
+    .pipe(gulp.dest(`${cssSrcDir}/tmp`));
 });
 
 gulp.task('stylus:watch', function () {
