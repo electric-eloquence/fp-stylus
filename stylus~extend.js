@@ -227,6 +227,10 @@ gulp.task('stylus:watch', function () {
   gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus']);
 });
 
+gulp.task('stylus:watch-no-comment', function () {
+  gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus:no-comment']);
+});
+
 gulp.task('stylus:watch-write-tmp', function () {
   gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus:write-tmp', 'stylus']);
 });
