@@ -5,7 +5,6 @@ const path = require('path');
 const fs = require('fs-extra');
 const gulp = require('gulp');
 const gulpStylus = require('gulp-stylus');
-const runSequence = require('run-sequence');
 const stylus = require('stylus');
 const utils = require('fepper-utils');
 
@@ -38,14 +37,14 @@ function diffThenRender(commentBool, cb) {
 
   if (hasComments) {
     if (commentBool) {
-      runSequence(
+      gulp.runSequence(
         'stylus:write-tmp',
         'stylus',
         cb
       );
     }
     else {
-      runSequence(
+      gulp.runSequence(
         'stylus:write-tmp',
         'stylus:no-comment',
         cb
@@ -204,7 +203,7 @@ gulp.task('stylus:no-comment', function () {
 });
 
 gulp.task('stylus:frontend-copy', function (cb) {
-  runSequence(
+  gulp.runSequence(
     'stylus:diff-then-no-comment',
     'ui:copy-styles',
     cb
