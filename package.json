@@ -6,7 +6,7 @@
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint *.js && eslint test/*.js",
-    "test": "nyc mocha"
+    "test": "nyc mocha --exit"
   },
   "husky": {
     "hooks": {
