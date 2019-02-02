@@ -410,7 +410,7 @@ describe('fp-stylus', function () {
       }
     });
 
-    it('should compile Stylus into CSS with line comments when a Stylus partial is modified', function (done) {
+    it('should compile Stylus into bld CSS with line comments when a Stylus partial is modified', function (done) {
       const stylus = fs.readFileSync(styleStylus, enc);
       const watcher = fp.tasks['stylus:watch'].fn();
 
@@ -459,7 +459,7 @@ describe('fp-stylus', function () {
       }
     });
 
-    it('should compile Stylus into CSS without line comments when a Stylus partial is modified', function (done) {
+    it('should compile Stylus into bld CSS without line comments when a Stylus partial is modified', function (done) {
       const stylus = fs.readFileSync(styleStylus, enc);
       const watcher = fp.tasks['stylus:watch-no-comment'].fn();
 
