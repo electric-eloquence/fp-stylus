@@ -13,6 +13,42 @@ const conf = global.conf;
 const cssBldDir = conf.ui.paths.source.cssBld;
 const cssSrcDir = conf.ui.paths.source.cssSrc;
 
+function backupCssBld() {
+  const cssFilesBld = fs.readdirSync(cssBldDir);
+  let i = cssFilesBld.length;
+
+  while (i--) {
+    const cssFileBld = `${cssBldDir}/${cssFilesBld[i]}`;
+    const stat = fs.statSync(cssFileBld);
+
+    if (!stat.isFile()) {
+      continue;
+    }
+
+    const cssFileTmp = `${cssSrcDir}/.tmp/${cssFilesBld[i]}`;
+
+    fs.copyFileSync(cssFileBld, cssFileTmp);
+  }
+}
+
+function restoreCssBld() {
+  const cssFilesTmp = fs.readdirSync(`${cssSrcDir}/.tmp`);
+  let i = cssFilesTmp.length;
+
+  while (i--) {
+    const cssFileTmp = `${cssSrcDir}/.tmp/${cssFilesTmp[i]}`;
+    const stat = fs.statSync(cssFileTmp);
+
+    if (!stat.isFile()) {
+      continue;
+    }
+
+    const cssFileBld = `${cssBldDir}/${cssFilesTmp[i]}`;
+
+    fs.copyFileSync(cssFileTmp, cssFileBld);
+  }
+}
+
 function diffThenRender(cb) {
   const cssFilesBld = fs.readdirSync(cssBldDir);
   let hasComments = false;
@@ -197,11 +233,17 @@ gulp.task('stylus:no-comment', function () {
     .pipe(gulp.dest(cssBldDir));
 });
 
+// Backup and restore bld CSS in case they have line comments. 'stylus:frontend-copy' will always copy CSS without line
+// comments to the backend.
 gulp.task('stylus:frontend-copy', function (cb) {
+  backupCssBld();
   gulp.runSequence(
-    'stylus:diff-then-no-comment',
+    'stylus:no-comment',
     'fepper:copy-styles',
-    cb
+    () => {
+      restoreCssBld();
+      cb();
+    }
   );
 });
 
