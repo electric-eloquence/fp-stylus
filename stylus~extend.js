@@ -99,6 +99,12 @@ function diffThenRender(commentBool, cb) {
               if (fs.existsSync(cssFileTmp)) {
                 cssFileTmpStr = fs.readFileSync(cssFileTmp, conf.enc);
               }
+              else {
+                // cssFileTmp probably doesn't exist on first run. Output for future comparison.
+                fs.outputFileSync(cssFileTmp, cssNew);
+                // Exit this iteration in next block.
+                cssFileTmpStr = cssNew;
+              }
 
               // Compare newly rendered css with the contents of the tmp file.
               // Exit if there has been no change. This is the case for users who only edit bld css and do not modify
@@ -114,16 +120,14 @@ function diffThenRender(commentBool, cb) {
               // Output tmp file for future comparison.
               fs.outputFileSync(cssFileTmp, cssNew);
 
-              // Now, compare against bld css.
+              // Now, compare tmp css against bld css.
               const cssFileBld = `${cssBldDir}/${stylFileObj.name}.css`;
               const stat = fs.statSync(cssFileBld);
 
               if (stat.isFile()) {
                 const cssOld = fs.readFileSync(cssFileBld, conf.enc);
 
-                // The first time 'stylus:diff-then-comment' is run, cssNew should equal cssOld.
-                // cssFileTmp will have been written at this point and will be used for future comparisons.
-                // If users only edit bld css and do not modify Stylus files, they should never get to this point.
+                // Only overwrite bld css if tmp css and bld css differ.
                 if (cssNew !== cssOld) {
                   stylus(stylFileStr)
                     .set('filename', stylFile)
@@ -176,9 +180,13 @@ gulp.task('stylus', function () {
 });
 
 // This first checks if the old bld CSS has line comments. If so, it runs the 'stylus' task and returns.
-// If there are no line comments, it processes Stylus without line comments, to compare the new CSS with the old CSS.
-// If there's a difference, it then processes Stylus again with line comments and writes that CSS to the bld directory.
-// Otherwise, it leaves the old bld CSS alone.
+// If there are no line comments, it compiles Stylus without line comments, to compare the new CSS with the old CSS.
+// The first time it runs, it just writes the compiled CSS to a tmp file for future comparison.
+// On subsequent runs, it compares against the previously written tmp CSS.
+// If there's no difference, it exits for that file and moves on to the next file if there is one.
+// If there is a difference, it writes the new tmp CSS file.
+// It then checks for a difference between the new tmp CSS and the bld CSS.
+// If there is a difference, it processes Stylus again with line comments and writes that over the bld CSS.
 // The intended result is for users who use Fepper defaults never to notice Stylus being processed if they never edit
 // Stylus files, and for users who do edit Stylus files to have Stylus process as expected.
 // Power-users should replace this with the 'stylus:once' or 'stylus:no-comment' task for better performance.
@@ -205,7 +213,7 @@ gulp.task('stylus:no-comment', function () {
 gulp.task('stylus:frontend-copy', function (cb) {
   gulp.runSequence(
     'stylus:diff-then-no-comment',
-    'ui:copy-styles',
+    'fepper:copy-styles',
     cb
   );
 });
