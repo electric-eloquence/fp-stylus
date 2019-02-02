@@ -13,7 +13,7 @@ const conf = global.conf;
 const cssBldDir = conf.ui.paths.source.cssBld;
 const cssSrcDir = conf.ui.paths.source.cssSrc;
 
-function diffThenRender(commentBool, cb) {
+function diffThenRender(cb) {
   const cssFilesBld = fs.readdirSync(cssBldDir);
   let hasComments = false;
   let i = cssFilesBld.length;
@@ -36,20 +36,11 @@ function diffThenRender(commentBool, cb) {
   }
 
   if (hasComments) {
-    if (commentBool) {
-      gulp.runSequence(
-        'stylus:write-tmp',
-        'stylus',
-        cb
-      );
-    }
-    else {
-      gulp.runSequence(
-        'stylus:write-tmp',
-        'stylus:no-comment',
-        cb
-      );
-    }
+    gulp.runSequence(
+      'stylus:write-tmp',
+      'stylus',
+      cb
+    );
 
     return;
   }
@@ -131,7 +122,7 @@ function diffThenRender(commentBool, cb) {
                 if (cssNew !== cssOld) {
                   stylus(stylFileStr)
                     .set('filename', stylFile)
-                    .set('linenos', commentBool)
+                    .set('linenos', true)
                     .render(
                       ((iteration1) => {
                         return (err1, cssNew1) => {
@@ -179,24 +170,20 @@ gulp.task('stylus', function () {
     .pipe(gulp.dest(cssBldDir));
 });
 
-// This first checks if the old bld CSS has line comments. If so, it runs the 'stylus' task and returns.
-// If there are no line comments, it compiles Stylus without line comments, to compare the new CSS with the old CSS.
-// The first time it runs, it just writes the compiled CSS to a tmp file for future comparison.
+// This first checks if the old bld CSS has line comments. If so, it runs the 'stylus' task.
+// It then renders Stylus into tmp CSS files without line comments for future comparison, and returns.
+// If the bld CSS has no line comments, it renders Stylus without line comments, to compare the new CSS with the old.
+// The first time it runs, it just writes the rendered CSS to a tmp file for future comparison.
 // On subsequent runs, it compares against the previously written tmp CSS.
 // If there's no difference, it exits for that file and moves on to the next file if there is one.
 // If there is a difference, it writes the new tmp CSS file.
 // It then checks for a difference between the new tmp CSS and the bld CSS.
-// If there is a difference, it processes Stylus again with line comments and writes that over the bld CSS.
-// The intended result is for users who use Fepper defaults never to notice Stylus being processed if they never edit
-// Stylus files, and for users who do edit Stylus files to have Stylus process as expected.
+// If there is a difference, it renders Stylus again with line comments and writes that over the bld CSS.
+// The intent is for users who use Fepper defaults to never render Stylus if they never edit Stylus files,
+// and for users who do edit Stylus files to have Stylus render as expected.
 // Power-users should replace this with the 'stylus:once' or 'stylus:no-comment' task for better performance.
 gulp.task('stylus:diff-then-comment', function (cb) {
-  diffThenRender(true, cb);
-});
-
-// Same as 'stylus:diff-then-comment' but with no line comments in rendered CSS.
-gulp.task('stylus:diff-then-no-comment', function (cb) {
-  diffThenRender(false, cb);
+  diffThenRender(cb);
 });
 
 // This runs the CSS processor without outputting line comments.
@@ -231,13 +218,16 @@ gulp.task('stylus:write-tmp', function () {
 });
 
 gulp.task('stylus:watch', function () {
-  gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus']);
+  // Return the watcher so it can be closed after testing.
+  return gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus']);
 });
 
 gulp.task('stylus:watch-no-comment', function () {
-  gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus:no-comment']);
+  // Return the watcher so it can be closed after testing.
+  return gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus:no-comment']);
 });
 
 gulp.task('stylus:watch-write-tmp', function () {
-  gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus:write-tmp', 'stylus']);
+  // Return the watcher so it can be closed after testing.
+  return gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus:write-tmp', 'stylus']);
 });
