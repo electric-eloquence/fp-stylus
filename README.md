@@ -8,24 +8,78 @@
 
 ### Install
 
-Add these tasks to `excludes/extend/custom.js`:
+```shell
+cd extend
+npm install --save-dev fp-stylus
+```
 
-* Under gulp task 'custom:frontend-copy'
-  * 'stylus:frontend-copy'
-* Under gulp task 'custom:once'
-  * 'stylus:once'
-* Under gulp task 'custom:watch'
-  * 'stylus:watch'
+### Use
 
-There is also a 'stylus:no-comment' task, which will output CSS without line 
-comments. You probably want this to process CSS destined for production.
+Add these tasks to `extend/custom.js`:
 
-In a full ([main](https://github.com/electric-eloquence/fepper)) Fepper 
-installation, there should already be a `source/_styles/src/stylus` directory. 
-Create one if there isn't and put all Stylus code there.
+* Under gulp task `'custom:frontend-copy'`
+  * `'stylus:frontend-copy'`
+* Under gulp task `'custom:once'`
+  * `'stylus:once'`
+* Under gulp task `'custom:watch'`
+  * `'stylus:watch'`
 
-Running any of these tasks will write the compiled CSS to the 
-`paths.source.cssBld` directory as defined in `patternlab-config.json`.
+On the command line:
+
+```shell
+fp stylus[:subtask]
+```
+
+The ([main](https://github.com/electric-eloquence/fepper)) Fepper distribution 
+ships with a `source/_styles/src/stylus` directory by default. Create one if 
+there isn't one, and put all Stylus code there.
+
+Stylus will build CSS into the `paths.source.cssBld` directory as declared in 
+`patternlab-config.json`.
+
+### Tasks
+
+#### `'stylus'`
+* Same as `'stylus:once'`.
+* Builds Stylus into CSS with line comments.
+* Overwrites CSS whether or not it has direct edits.
+
+#### `'stylus:diff-then-comment'`
+* Usually under gulp task `'custom:once'`.
+* Checks if the Stylus code was modified before overwriting CSS.
+* Allows direct edits to CSS without triggering Stylus builds.
+* Allows the choice of using Stylus exclusively or not using Stylus exclusively.
+
+#### `'stylus:no-comment'`
+* Same as `'stylus'` and `'stylus:once'` but without line comments.
+
+#### `'stylus:frontend-copy'`
+* Usually under gulp task `'custom:frontend-copy'`.
+* Copies CSS code to the backend.
+* Does not modify the CSS source.
+* Does not copy line comments to the backend destination.
+
+#### `'stylus:write-tmp'`
+* Writes the tmp file for comparing the current Stylus build with the previous 
+  one.
+
+#### `'stylus:watch'`
+* Watches the `source/_styles/src/stylus` directory for a file modification.
+* Triggers a Stylus build and overwrites CSS whether or not it has direct edits.
+* Puts line comments in the CSS.
+
+#### `'stylus:watch-no-comment'`
+* Watches the `source/_styles/src/stylus` directory for a file modification.
+* Triggers a Stylus build and overwrites CSS whether or not it has direct edits.
+* Does not put line comments in the CSS.
+
+#### `'stylus:watch-write-tmp'`
+* Usually under gulp task `'custom:watch'`.
+* Watches the `source/_styles/src/stylus` directory for a file modification.
+* Writes the tmp file for comparing the current Stylus build with the previous 
+  one.
+* Puts line comments in the CSS.
+* Overwrites CSS whether or not it has direct edits.
 
 [snyk-image]: https://snyk.io/test/github/electric-eloquence/fp-stylus/master/badge.svg
 [snyk-url]: https://snyk.io/test/github/electric-eloquence/fp-stylus/master
