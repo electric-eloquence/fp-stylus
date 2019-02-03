@@ -1,0 +1,29 @@
+
+/* line 297 : /Users/ee/Sites/Vagrant/Bionic64/VHosts/electric-eloquence/fp-stylus/test/source/_styles/src/stylus/local-yml.styl */
+
+/* line 1 : /Users/ee/Sites/Vagrant/Bionic64/VHosts/electric-eloquence/fp-stylus/node_modules/stylus/lib/functions/index.styl */
+
+/* line 8 : /Users/ee/Sites/Vagrant/Bionic64/VHosts/electric-eloquence/fp-stylus/node_modules/stylus/lib/functions/index.styl */
+
+/* line 2 : /Users/ee/Sites/Vagrant/Bionic64/VHosts/electric-eloquence/fp-stylus/test/source/_styles/src/stylus/0-base/00-variables.styl */
+
+/* line 3 : /Users/ee/Sites/Vagrant/Bionic64/VHosts/electric-eloquence/fp-stylus/test/source/_styles/src/stylus/local-yml.styl */
+body {
+  background: #fff;
+  font: 1.6em/1.5 Helvetica, "Nimbus Sans L", "Liberation Sans", Roboto, sans-serif;
+  color: #333;
+  min-height: 100vh;
+  padding-bottom: 5rem;
+  position: relative;
+}
+
+/* line 10 : /Users/ee/Sites/Vagrant/Bionic64/VHosts/electric-eloquence/fp-stylus/test/source/_styles/src/stylus/local-yml.styl */
+a {
+  color: #333;
+}
+
+/* line 12 : /Users/ee/Sites/Vagrant/Bionic64/VHosts/electric-eloquence/fp-stylus/test/source/_styles/src/stylus/local-yml.styl */
+a:hover,
+a:focus {
+  color: #808080;
+}

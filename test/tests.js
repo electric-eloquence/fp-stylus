@@ -125,7 +125,7 @@ describe('fp-stylus', function () {
             expect(styleBldTmp).to.not.contain('/* line 2');
             expect(styleBldTmp).to.not.contain('/* line 3');
 
-            //expect(styleBldCssBefore).to.equal(styleBldCssAfter);
+            expect(styleBldCssBefore).to.equal(styleBldCssAfter);
 
             done();
           }
@@ -249,6 +249,7 @@ describe('fp-stylus', function () {
       const styleBldCss = fs.readFileSync(styleBld, enc);
 
       expect(styleBldExistsBefore).to.equal(false);
+
       expect(styleBldCss).to.contain(cssBody);
       expect(styleBldCss).to.contain(cssA);
       expect(styleBldCss).to.contain(cssPseudoClass);
@@ -265,50 +266,74 @@ describe('fp-stylus', function () {
   });
 
   describe('fp stylus:frontend-copy', function () {
+    const styleBackAlt = join(__dirname, 'backend/docroot/local-yml/local-yml.css');
+    const styleBldAlt = join(__dirname, 'source/_styles/bld/local-yml.css');
+    let styleBackAltExistsBefore;
     let styleBackExistsBefore;
     let styleBldBefore;
 
     before(function (done) {
       if (fs.existsSync(styleBack)) {
         fs.emptyDirSync(path.dirname(styleBack));
+        fs.unlinkSync(styleBackAlt);
       }
 
+      styleBackAltExistsBefore = fs.existsSync(styleBackAlt);
       styleBackExistsBefore = fs.existsSync(styleBack);
 
       fp.runSequence(
         'stylus',
         () => {
           styleBldBefore = fs.readFileSync(styleBld, enc);
-          done();
+          fp.runSequence(
+            'stylus:frontend-copy',
+            () => {
+              done();
+            }
+          );
         }
       );
     });
 
-    it('should compile Stylus without line comments and copy it to the backend', function (done) {
-      fp.runSequence(
-        'stylus:frontend-copy',
-        () => {
-          const styleBackCss = fs.readFileSync(styleBack, enc);
+    it('should compile Stylus without line comments and copy it to the backend', function () {
+      const styleBackCss = fs.readFileSync(styleBack, enc);
 
-          expect(styleBldBefore).to.contain(cssBody);
-          expect(styleBldBefore).to.contain(cssA);
-          expect(styleBldBefore).to.contain(cssPseudoClass);
-          expect(styleBldBefore).to.contain('/* line 1');
-          expect(styleBldBefore).to.contain('/* line 2');
-          expect(styleBldBefore).to.contain('/* line 3');
+      expect(styleBldBefore).to.contain(cssBody);
+      expect(styleBldBefore).to.contain(cssA);
+      expect(styleBldBefore).to.contain(cssPseudoClass);
+      expect(styleBldBefore).to.contain('/* line 1');
+      expect(styleBldBefore).to.contain('/* line 2');
+      expect(styleBldBefore).to.contain('/* line 3');
 
-          expect(styleBackCss).to.contain(cssBody);
-          expect(styleBackCss).to.contain(cssA);
-          expect(styleBackCss).to.contain(cssPseudoClass);
-          expect(styleBackCss).to.not.contain('/* line 1');
-          expect(styleBackCss).to.not.contain('/* line 2');
-          expect(styleBackCss).to.not.contain('/* line 3');
+      expect(styleBackExistsBefore).to.equal(false);
 
-          expect(styleBackExistsBefore).to.equal(false);
+      expect(styleBackCss).to.contain(cssBody);
+      expect(styleBackCss).to.contain(cssA);
+      expect(styleBackCss).to.contain(cssPseudoClass);
+      expect(styleBackCss).to.not.contain('/* line 1');
+      expect(styleBackCss).to.not.contain('/* line 2');
+      expect(styleBackCss).to.not.contain('/* line 3');
+    });
 
-          done();
-        }
-      );
+    it('should compile Stylus without line comments and copy it to an alternate backend directory', function () {
+      const styleBldAltCss = fs.readFileSync(styleBldAlt, enc);
+      const styleBackAltCss = fs.readFileSync(styleBackAlt, enc);
+
+      expect(styleBldAltCss).to.contain(cssBody);
+      expect(styleBldAltCss).to.contain(cssA);
+      expect(styleBldAltCss).to.contain(cssPseudoClass);
+      expect(styleBldAltCss).to.contain('/* line 1');
+      expect(styleBldAltCss).to.contain('/* line 2');
+      expect(styleBldAltCss).to.contain('/* line 3');
+
+      expect(styleBackAltExistsBefore).to.equal(false);
+
+      expect(styleBackAltCss).to.contain(cssBody);
+      expect(styleBackAltCss).to.contain(cssA);
+      expect(styleBackAltCss).to.contain(cssPseudoClass);
+      expect(styleBackAltCss).to.not.contain('/* line 1');
+      expect(styleBackAltCss).to.not.contain('/* line 2');
+      expect(styleBackAltCss).to.not.contain('/* line 3');
     });
 
     it('should preserve line comments in the bld file', function () {
