@@ -21,6 +21,7 @@ function backupCssBld() {
     const cssFileBld = `${cssBldDir}/${cssFilesBld[i]}`;
     const stat = fs.statSync(cssFileBld);
 
+    /* istanbul ignore if */
     if (!stat.isFile()) {
       continue;
     }
@@ -39,6 +40,7 @@ function restoreCssBld() {
     const cssFileTmp = `${cssSrcDir}/.tmp/${cssFilesTmp[i]}`;
     const stat = fs.statSync(cssFileTmp);
 
+    /* istanbul ignore if */
     if (!stat.isFile()) {
       continue;
     }
@@ -58,6 +60,7 @@ function diffThenRender(cb) {
     const cssFileBld = `${cssBldDir}/${cssFilesBld[i]}`;
     const stat = fs.statSync(cssFileBld);
 
+    /* istanbul ignore if */
     if (!stat.isFile()) {
       continue;
     }
@@ -99,6 +102,7 @@ function diffThenRender(cb) {
 
     const stat = fs.statSync(stylFile);
 
+    /* istanbul ignore if */
     if (!stat.isFile()) {
       if (i === 0) {
         cb();
@@ -116,6 +120,7 @@ function diffThenRender(cb) {
         ((iteration) => {
           return (err, cssNew) => {
             if (err) {
+              /* istanbul ignore next */
               utils.error(err);
             }
             else {
@@ -137,6 +142,7 @@ function diffThenRender(cb) {
               // Exit if there has been no change. This is the case for users who only edit bld css and do not modify
               // Stylus files.
               if (cssFileTmpStr === cssNew) {
+                /* istanbul ignore if */
                 if (iteration === 0) {
                   cb();
                 }
@@ -163,12 +169,14 @@ function diffThenRender(cb) {
                       ((iteration1) => {
                         return (err1, cssNew1) => {
                           if (err1) {
+                            /* istanbul ignore next */
                             utils.error(err1);
                           }
                           else {
                             fs.outputFileSync(cssFileBld, cssNew1);
                           }
 
+                          /* istanbul ignore if */
                           if (iteration1 === 0) {
                             cb();
                           }
@@ -179,6 +187,7 @@ function diffThenRender(cb) {
               }
             }
 
+            /* istanbul ignore if */
             if (iteration === 0) {
               cb();
             }
@@ -186,6 +195,7 @@ function diffThenRender(cb) {
         })(i)
       );
 
+    /* istanbul ignore if */
     if (i === 0) {
       cb();
     }
@@ -193,7 +203,9 @@ function diffThenRender(cb) {
 }
 
 function handleError(err) {
+  /* istanbul ignore next */
   utils.error(err.toString());
+  /* istanbul ignore next */
   this.emit('end');
 }
 
