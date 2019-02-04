@@ -37,10 +37,15 @@ there isn't one, and put all Stylus code there.
 Stylus will build CSS into the `paths.source.cssBld` directory as declared in 
 `patternlab-config.json`.
 
+This extension defaults toward the writing of line comments for debugging 
+purposes. If a project decision is made to style with Stylus, it would be a good 
+idea to have version control ignore CSS builds in the `source` directory. This 
+would avoid committing line comments, which could otherwise lead to a morass of 
+conflicts.
+
 ### Tasks
 
 #### `'stylus'`
-* Same as `'stylus:once'`.
 * Builds Stylus into CSS with line comments.
 * Overwrites CSS whether or not it has direct edits.
 
@@ -50,18 +55,17 @@ Stylus will build CSS into the `paths.source.cssBld` directory as declared in
 * Allows direct edits to CSS without triggering Stylus builds.
 * Allows the choice of using Stylus exclusively or not using Stylus exclusively.
 
+#### `'stylus:frontend-copy'`
+* Usually under gulp task `'custom:frontend-copy'`.
+* Checks if the CSS has line comments or not.
+* If it does, it builds Stylus without line comments and copies the CSS to the backend.
+* If it does not, it just copies the CSS to the backend.
+
 #### `'stylus:no-comment'`
 * Same as `'stylus'` and `'stylus:once'` but without line comments.
 
-#### `'stylus:frontend-copy'`
-* Usually under gulp task `'custom:frontend-copy'`.
-* Copies CSS code to the backend.
-* Does not modify the CSS source.
-* Does not copy line comments to the backend destination.
-
-#### `'stylus:write-tmp'`
-* Writes the tmp file for comparing the current Stylus build with the previous 
-  one.
+#### `'stylus:once'`
+* Same as `'stylus'`.
 
 #### `'stylus:watch'`
 * Watches the `source/_styles/src/stylus` directory for a file modification.
@@ -80,6 +84,10 @@ Stylus will build CSS into the `paths.source.cssBld` directory as declared in
   one.
 * Puts line comments in the CSS.
 * Overwrites CSS whether or not it has direct edits.
+
+#### `'stylus:write-tmp'`
+* Writes the tmp file for comparing the current Stylus build with the previous 
+  one.
 
 [snyk-image]: https://snyk.io/test/github/electric-eloquence/fp-stylus/master/badge.svg
 [snyk-url]: https://snyk.io/test/github/electric-eloquence/fp-stylus/master

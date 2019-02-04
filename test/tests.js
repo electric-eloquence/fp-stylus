@@ -226,6 +226,187 @@ describe('fp-stylus', function () {
     });
   });
 
+  describe('fp stylus:frontend-copy', function () {
+    const styleBackAlt = join(__dirname, 'backend/docroot/local-yml/local-yml.css');
+    const styleBldAlt = join(__dirname, 'source/_styles/bld/local-yml.css');
+    let styleBackAltExistsBefore;
+    let styleBackExistsBefore;
+
+    it(
+      'should, if the bld CSS has line comments, compile Stylus without line comments and copy it to the backend',
+      function (done) {
+        if (fs.existsSync(styleBack)) {
+          fs.emptyDirSync(path.dirname(styleBack));
+        }
+
+        styleBackExistsBefore = fs.existsSync(styleBack);
+
+        fp.runSequence(
+          'stylus',
+          () => {
+            const styleBldCss = fs.readFileSync(styleBld, enc);
+
+            fp.runSequence(
+              'stylus:frontend-copy',
+              'frontend-copy',
+              () => {
+                const styleBackCss = fs.readFileSync(styleBack, enc);
+
+                expect(styleBldCss).to.contain(cssBody);
+                expect(styleBldCss).to.contain(cssA);
+                expect(styleBldCss).to.contain(cssPseudoClass);
+                expect(styleBldCss).to.contain('/* line 1');
+                expect(styleBldCss).to.contain('/* line 2');
+                expect(styleBldCss).to.contain('/* line 3');
+
+                expect(styleBackExistsBefore).to.equal(false);
+
+                expect(styleBackCss).to.contain(cssBody);
+                expect(styleBackCss).to.contain(cssA);
+                expect(styleBackCss).to.contain(cssPseudoClass);
+                expect(styleBackCss).to.not.contain('/* line 1');
+                expect(styleBackCss).to.not.contain('/* line 2');
+                expect(styleBackCss).to.not.contain('/* line 3');
+
+                done();
+              }
+            );
+          }
+        );
+      }
+    );
+
+    it('should, if the bld CSS has no line comments, copy it to the backend', function (done) {
+      if (fs.existsSync(styleBack)) {
+        fs.emptyDirSync(path.dirname(styleBack));
+      }
+
+      styleBackExistsBefore = fs.existsSync(styleBack);
+
+      fp.runSequence(
+        'stylus:no-comment',
+        () => {
+          const styleBldCss = fs.readFileSync(styleBld, enc);
+
+          fp.runSequence(
+            'stylus:frontend-copy',
+            'frontend-copy',
+            () => {
+              const styleBackCss = fs.readFileSync(styleBack, enc);
+
+              expect(styleBldCss).to.contain(cssBody);
+              expect(styleBldCss).to.contain(cssA);
+              expect(styleBldCss).to.contain(cssPseudoClass);
+              expect(styleBldCss).to.not.contain('/* line 1');
+              expect(styleBldCss).to.not.contain('/* line 2');
+              expect(styleBldCss).to.not.contain('/* line 3');
+
+              expect(styleBackExistsBefore).to.equal(false);
+
+              expect(styleBackCss).to.contain(cssBody);
+              expect(styleBackCss).to.contain(cssA);
+              expect(styleBackCss).to.contain(cssPseudoClass);
+              expect(styleBackCss).to.not.contain('/* line 1');
+              expect(styleBackCss).to.not.contain('/* line 2');
+              expect(styleBackCss).to.not.contain('/* line 3');
+
+              expect(styleBldCss).to.equal(styleBackCss);
+
+              done();
+            }
+          );
+        }
+      );
+    });
+
+    it(
+      'should, if the bld CSS has line comments, compile Stylus without line comments and copy it to an alternate backend directory',
+      function (done) {
+        if (fs.existsSync(styleBack)) {
+          fs.unlinkSync(styleBackAlt);
+        }
+
+        styleBackAltExistsBefore = fs.existsSync(styleBackAlt);
+
+        fp.runSequence(
+          'stylus',
+          () => {
+            const styleBldCss = fs.readFileSync(styleBldAlt, enc);
+
+            fp.runSequence(
+              'stylus:frontend-copy',
+              'frontend-copy',
+              () => {
+                const styleBackCss = fs.readFileSync(styleBackAlt, enc);
+
+                expect(styleBldCss).to.contain(cssBody);
+                expect(styleBldCss).to.contain(cssA);
+                expect(styleBldCss).to.contain(cssPseudoClass);
+                expect(styleBldCss).to.contain('/* line 1');
+                expect(styleBldCss).to.contain('/* line 2');
+                expect(styleBldCss).to.contain('/* line 3');
+
+                expect(styleBackAltExistsBefore).to.equal(false);
+
+                expect(styleBackCss).to.contain(cssBody);
+                expect(styleBackCss).to.contain(cssA);
+                expect(styleBackCss).to.contain(cssPseudoClass);
+                expect(styleBackCss).to.not.contain('/* line 1');
+                expect(styleBackCss).to.not.contain('/* line 2');
+                expect(styleBackCss).to.not.contain('/* line 3');
+
+                done();
+              }
+            );
+          }
+        );
+      }
+    );
+
+    it('should, if the bld CSS has no line comments, copy it to an alternate backend directory', function (done) {
+      if (fs.existsSync(styleBack)) {
+        fs.unlinkSync(styleBackAlt);
+      }
+
+      styleBackAltExistsBefore = fs.existsSync(styleBackAlt);
+
+      fp.runSequence(
+        'stylus:no-comment',
+        () => {
+          const styleBldCss = fs.readFileSync(styleBldAlt, enc);
+
+          fp.runSequence(
+            'stylus:frontend-copy',
+            'frontend-copy',
+            () => {
+              const styleBackCss = fs.readFileSync(styleBackAlt, enc);
+
+              expect(styleBldCss).to.contain(cssBody);
+              expect(styleBldCss).to.contain(cssA);
+              expect(styleBldCss).to.contain(cssPseudoClass);
+              expect(styleBldCss).to.not.contain('/* line 1');
+              expect(styleBldCss).to.not.contain('/* line 2');
+              expect(styleBldCss).to.not.contain('/* line 3');
+
+              expect(styleBackAltExistsBefore).to.equal(false);
+
+              expect(styleBackCss).to.contain(cssBody);
+              expect(styleBackCss).to.contain(cssA);
+              expect(styleBackCss).to.contain(cssPseudoClass);
+              expect(styleBackCss).to.not.contain('/* line 1');
+              expect(styleBackCss).to.not.contain('/* line 2');
+              expect(styleBackCss).to.not.contain('/* line 3');
+
+              expect(styleBldCss).to.equal(styleBackCss);
+
+              done();
+            }
+          );
+        }
+      );
+    });
+  });
+
   describe('fp stylus:no-comment', function () {
     let styleBldExistsBefore;
 
@@ -265,91 +446,6 @@ describe('fp-stylus', function () {
     });
   });
 
-  describe('fp stylus:frontend-copy', function () {
-    const styleBackAlt = join(__dirname, 'backend/docroot/local-yml/local-yml.css');
-    const styleBldAlt = join(__dirname, 'source/_styles/bld/local-yml.css');
-    let styleBackAltExistsBefore;
-    let styleBackExistsBefore;
-    let styleBldBefore;
-
-    before(function (done) {
-      if (fs.existsSync(styleBack)) {
-        fs.emptyDirSync(path.dirname(styleBack));
-        fs.unlinkSync(styleBackAlt);
-      }
-
-      styleBackAltExistsBefore = fs.existsSync(styleBackAlt);
-      styleBackExistsBefore = fs.existsSync(styleBack);
-
-      fp.runSequence(
-        'stylus',
-        () => {
-          styleBldBefore = fs.readFileSync(styleBld, enc);
-          fp.runSequence(
-            'stylus:frontend-copy',
-            () => {
-              done();
-            }
-          );
-        }
-      );
-    });
-
-    it('should compile Stylus without line comments and copy it to the backend', function () {
-      const styleBackCss = fs.readFileSync(styleBack, enc);
-
-      expect(styleBldBefore).to.contain(cssBody);
-      expect(styleBldBefore).to.contain(cssA);
-      expect(styleBldBefore).to.contain(cssPseudoClass);
-      expect(styleBldBefore).to.contain('/* line 1');
-      expect(styleBldBefore).to.contain('/* line 2');
-      expect(styleBldBefore).to.contain('/* line 3');
-
-      expect(styleBackExistsBefore).to.equal(false);
-
-      expect(styleBackCss).to.contain(cssBody);
-      expect(styleBackCss).to.contain(cssA);
-      expect(styleBackCss).to.contain(cssPseudoClass);
-      expect(styleBackCss).to.not.contain('/* line 1');
-      expect(styleBackCss).to.not.contain('/* line 2');
-      expect(styleBackCss).to.not.contain('/* line 3');
-    });
-
-    it('should compile Stylus without line comments and copy it to an alternate backend directory', function () {
-      const styleBldAltCss = fs.readFileSync(styleBldAlt, enc);
-      const styleBackAltCss = fs.readFileSync(styleBackAlt, enc);
-
-      expect(styleBldAltCss).to.contain(cssBody);
-      expect(styleBldAltCss).to.contain(cssA);
-      expect(styleBldAltCss).to.contain(cssPseudoClass);
-      expect(styleBldAltCss).to.contain('/* line 1');
-      expect(styleBldAltCss).to.contain('/* line 2');
-      expect(styleBldAltCss).to.contain('/* line 3');
-
-      expect(styleBackAltExistsBefore).to.equal(false);
-
-      expect(styleBackAltCss).to.contain(cssBody);
-      expect(styleBackAltCss).to.contain(cssA);
-      expect(styleBackAltCss).to.contain(cssPseudoClass);
-      expect(styleBackAltCss).to.not.contain('/* line 1');
-      expect(styleBackAltCss).to.not.contain('/* line 2');
-      expect(styleBackAltCss).to.not.contain('/* line 3');
-    });
-
-    it('should preserve line comments in the bld file', function () {
-      const styleBldAfter = fs.readFileSync(styleBld, enc);
-
-      expect(styleBldAfter).to.contain(cssBody);
-      expect(styleBldAfter).to.contain(cssA);
-      expect(styleBldAfter).to.contain(cssPseudoClass);
-      expect(styleBldAfter).to.contain('/* line 1');
-      expect(styleBldAfter).to.contain('/* line 2');
-      expect(styleBldAfter).to.contain('/* line 3');
-
-      expect(styleBldBefore).to.equal(styleBldAfter);
-    });
-  });
-
   describe('fp stylus:once', function () {
     let styleBldExistsBefore;
 
@@ -377,36 +473,6 @@ describe('fp-stylus', function () {
       expect(styleBldCss).to.contain('/* line 1');
       expect(styleBldCss).to.contain('/* line 2');
       expect(styleBldCss).to.contain('/* line 3');
-    });
-  });
-
-  describe('fp stylus:write-tmp', function () {
-    let styleTmpExistsBefore;
-
-    before(function (done) {
-      if (fs.existsSync(styleTmp)) {
-        fs.unlinkSync(styleTmp);
-      }
-
-      styleTmpExistsBefore = fs.existsSync(styleTmp);
-
-      fp.runSequence(
-        'stylus:write-tmp',
-        done
-      );
-    });
-
-    it('should compile Stylus partials into a CSS file without line comments to the .tmp directory', function () {
-      const styleTmpCss = fs.readFileSync(styleTmp, enc);
-
-      expect(styleTmpExistsBefore).to.equal(false);
-
-      expect(styleTmpCss).to.contain(cssBody);
-      expect(styleTmpCss).to.contain(cssA);
-      expect(styleTmpCss).to.contain(cssPseudoClass);
-      expect(styleTmpCss).to.not.contain('/* line 1');
-      expect(styleTmpCss).to.not.contain('/* line 2');
-      expect(styleTmpCss).to.not.contain('/* line 3');
     });
   });
 
@@ -567,5 +633,35 @@ describe('fp-stylus', function () {
         }, 100);
       }
     );
+  });
+
+  describe('fp stylus:write-tmp', function () {
+    let styleTmpExistsBefore;
+
+    before(function (done) {
+      if (fs.existsSync(styleTmp)) {
+        fs.unlinkSync(styleTmp);
+      }
+
+      styleTmpExistsBefore = fs.existsSync(styleTmp);
+
+      fp.runSequence(
+        'stylus:write-tmp',
+        done
+      );
+    });
+
+    it('should compile Stylus partials into a CSS file without line comments to the .tmp directory', function () {
+      const styleTmpCss = fs.readFileSync(styleTmp, enc);
+
+      expect(styleTmpExistsBefore).to.equal(false);
+
+      expect(styleTmpCss).to.contain(cssBody);
+      expect(styleTmpCss).to.contain(cssA);
+      expect(styleTmpCss).to.contain(cssPseudoClass);
+      expect(styleTmpCss).to.not.contain('/* line 1');
+      expect(styleTmpCss).to.not.contain('/* line 2');
+      expect(styleTmpCss).to.not.contain('/* line 3');
+    });
   });
 });

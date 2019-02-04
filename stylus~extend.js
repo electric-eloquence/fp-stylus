@@ -13,45 +13,7 @@ const conf = global.conf;
 const cssBldDir = conf.ui.paths.source.cssBld;
 const cssSrcDir = conf.ui.paths.source.cssSrc;
 
-function backupCssBld() {
-  const cssFilesBld = fs.readdirSync(cssBldDir);
-  let i = cssFilesBld.length;
-
-  while (i--) {
-    const cssFileBld = `${cssBldDir}/${cssFilesBld[i]}`;
-    const stat = fs.statSync(cssFileBld);
-
-    /* istanbul ignore if */
-    if (!stat.isFile()) {
-      continue;
-    }
-
-    const cssFileTmp = `${cssSrcDir}/.tmp/${cssFilesBld[i]}`;
-
-    fs.copyFileSync(cssFileBld, cssFileTmp);
-  }
-}
-
-function restoreCssBld() {
-  const cssFilesTmp = fs.readdirSync(`${cssSrcDir}/.tmp`);
-  let i = cssFilesTmp.length;
-
-  while (i--) {
-    const cssFileTmp = `${cssSrcDir}/.tmp/${cssFilesTmp[i]}`;
-    const stat = fs.statSync(cssFileTmp);
-
-    /* istanbul ignore if */
-    if (!stat.isFile()) {
-      continue;
-    }
-
-    const cssFileBld = `${cssBldDir}/${cssFilesTmp[i]}`;
-
-    fs.copyFileSync(cssFileTmp, cssFileBld);
-  }
-}
-
-function diffThenRender(cb) {
+function testForComments() {
   const cssFilesBld = fs.readdirSync(cssBldDir);
   let hasComments = false;
   let i = cssFilesBld.length;
@@ -74,6 +36,12 @@ function diffThenRender(cb) {
     }
   }
 
+  return hasComments;
+}
+
+function diffThenRender(cb) {
+  const hasComments = testForComments();
+
   if (hasComments) {
     gulp.runSequence(
       'stylus:write-tmp',
@@ -86,7 +54,7 @@ function diffThenRender(cb) {
 
   const stylDir = `${cssSrcDir}/stylus`;
   const stylFiles = fs.readdirSync(stylDir);
-  i = stylFiles.length;
+  let i = stylFiles.length;
 
   while (i--) {
     const stylFile = `${stylDir}/${stylFiles[i]}`;
@@ -234,6 +202,23 @@ gulp.task('stylus:diff-then-comment', function (cb) {
   diffThenRender(cb);
 });
 
+// 'stylus:frontend-copy' checks if there are line comments in the bld CSS.
+// If there are, it renders Stylus without line comments for the full 'frontend-copy' task to copy to the backend.
+// If there are not, it does nothing and allows the full 'frontend-copy' task to copy the bld CSS to the backend.
+gulp.task('stylus:frontend-copy', function (cb) {
+  const hasComments = testForComments();
+
+  if (hasComments) {
+    gulp.runSequence(
+      'stylus:no-comment',
+      cb
+    );
+  }
+  else {
+    cb();
+  }
+});
+
 // This runs the CSS processor without outputting line comments.
 // You probably want this to process CSS destined for production.
 gulp.task('stylus:no-comment', function () {
@@ -245,31 +230,7 @@ gulp.task('stylus:no-comment', function () {
     .pipe(gulp.dest(cssBldDir));
 });
 
-// Backup and restore bld CSS in case they have line comments. 'stylus:frontend-copy' will always copy CSS without line
-// comments to the backend.
-gulp.task('stylus:frontend-copy', function (cb) {
-  backupCssBld();
-  gulp.runSequence(
-    'stylus:no-comment',
-    'fepper:copy-styles',
-    () => {
-      restoreCssBld();
-      cb();
-    }
-  );
-});
-
 gulp.task('stylus:once', ['stylus']);
-
-// This outputs tmp files without line comments to check for modifications to Stylus code.
-gulp.task('stylus:write-tmp', function () {
-  return gulp.src(cssSrcDir + '/stylus/*.styl')
-    .pipe(gulpStylus({
-      linenos: false
-    }))
-    .on('error', handleError)
-    .pipe(gulp.dest(`${cssSrcDir}/.tmp`));
-});
 
 gulp.task('stylus:watch', function () {
   // Return the watcher so it can be closed after testing.
@@ -284,4 +245,14 @@ gulp.task('stylus:watch-no-comment', function () {
 gulp.task('stylus:watch-write-tmp', function () {
   // Return the watcher so it can be closed after testing.
   return gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus:write-tmp', 'stylus']);
+});
+
+// This outputs tmp files without line comments to check for modifications to Stylus code.
+gulp.task('stylus:write-tmp', function () {
+  return gulp.src(cssSrcDir + '/stylus/*.styl')
+    .pipe(gulpStylus({
+      linenos: false
+    }))
+    .on('error', handleError)
+    .pipe(gulp.dest(`${cssSrcDir}/.tmp`));
 });
