@@ -71,6 +71,7 @@ setting will accept any documented Stylus option and submit it to Stylus.
 * Checks if the Stylus code was modified before overwriting CSS.
 * Allows direct edits to CSS without triggering Stylus builds.
 * Allows the choice of using Stylus exclusively or not using Stylus exclusively.
+* Respects the `stylus.linenos` setting in `pref.yml`.
 
 #### `'stylus:frontend-copy'`
 * Usually under gulp task `'custom:frontend-copy'`.

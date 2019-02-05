@@ -16,6 +16,38 @@ const pref = global.pref;
 const cssBldDir = conf.ui.paths.source.cssBld;
 const cssSrcDir = conf.ui.paths.source.cssSrc;
 
+function getSourcemapDest() {
+  if (pref.stylus.sourcemap) {
+    if (!pref.stylus.sourcemap.inline) {
+      return '.';
+    }
+  }
+
+  return;
+}
+
+function getSourceRoot() {
+  if (pref.stylus.sourcemap) {
+    let sourceRoot;
+
+    if (pref.stylus.sourcemap.sourceRoot) {
+      sourceRoot = pref.stylus.sourcemap.sourceRoot;
+    }
+    else {
+      const uiSourceDir = conf.ui.paths.source.root;
+
+      if (cssSrcDir.indexOf(uiSourceDir) === 0) {
+        sourceRoot = cssSrcDir.slice(uiSourceDir.length);
+        sourceRoot += '/stylus';
+      }
+    }
+
+    return sourceRoot;
+  }
+
+  return;
+}
+
 function streamUntouched() {
   return new Transform({
     readableObjectMode: true,
@@ -27,48 +59,12 @@ function streamUntouched() {
   });
 }
 
-// Some setup according to prefs.
-
-let prefsStylus = {};
-
-if (pref.stylus && pref.stylus instanceof Object) {
-  prefsStylus = pref.stylus;
-}
+// Set up pref.stylus.
+pref.stylus = pref.stylus || {};
 
 // Opt for line comments by default.
-if (prefsStylus.linenos !== false) {
-  prefsStylus.linenos = true;
-}
-
-// If not writing sourcemaps, just have sourcemaps.init() and sourcemaps.write() pipe the stream through untouched.
-if (!prefsStylus.sourcemap) {
-  sourcemaps.init = () => {
-    return streamUntouched();
-  };
-  sourcemaps.write = () => {
-    return streamUntouched();
-  };
-}
-
-let sourcemapDest;
-let sourceRoot;
-
-if (prefsStylus.sourcemap) {
-  if (!prefsStylus.sourcemap.inline) {
-    sourcemapDest = '.';
-  }
-
-  if (prefsStylus.sourcemap && prefsStylus.sourcemap.sourceRoot) {
-    sourceRoot = prefsStylus.sourcemap.sourceRoot;
-  }
-  else {
-    const uiSourceDir = conf.ui.paths.source.root;
-
-    if (cssSrcDir.indexOf(uiSourceDir) === 0) {
-      sourceRoot = cssSrcDir.slice(uiSourceDir.length);
-      sourceRoot += '/stylus';
-    }
-  }
+if (pref.stylus.linenos !== false) {
+  pref.stylus.linenos = true;
 }
 
 function testForComments() {
@@ -181,7 +177,7 @@ function diffThenRender(cb) {
 
               // Now, compare tmp css against bld css.
               const cssFileBld = `${cssBldDir}/${stylFileObj.name}.css`;
-              const prefsStylusClone = Object.assign({}, prefsStylus, {filename: stylFile});
+              const prefStylusClone = Object.assign({}, pref.stylus, {filename: stylFile});
               const stat = fs.statSync(cssFileBld);
 
               if (stat.isFile()) {
@@ -189,7 +185,7 @@ function diffThenRender(cb) {
 
                 // Only overwrite bld css if tmp css and bld css differ.
                 if (cssNew !== cssOld) {
-                  const style = stylus(stylFileStr, prefsStylusClone);
+                  const style = stylus(stylFileStr, prefStylusClone);
 
                   style.render(
                     ((iteration1) => {
@@ -203,7 +199,7 @@ function diffThenRender(cb) {
 
                           // Only write sourcemap if not printing line comments. Stylus internally checks whether the
                           // sourcemap is to be inline or external so there is no need for that check here.
-                          if (style.sourcemap && !prefsStylusClone.linenos) {
+                          if (style.sourcemap && !prefStylusClone.linenos) {
                             fs.outputFileSync(`${cssFileBld}.map`, JSON.stringify(style.sourcemap));
                           }
                         }
@@ -244,20 +240,25 @@ function handleError(err) {
 // Declare gulp tasks.
 
 gulp.task('stylus', function () {
+  const sourceRoot = getSourceRoot();
+  let sourcemapsInit = sourcemaps.init;
+  let sourcemapsWrite = sourcemaps.write;
+
+  // Do not write sourcemaps if pref.stylus.sourcemap is falsey.
   // Do not write sourcemaps if linenos === true, as the sourcemaps will be inaccurate and the linenos redundant.
-  if (prefsStylus.sourcemap && prefsStylus.linenos) {
-    sourcemaps.init = () => {
+  if (!pref.stylus.sourcemap || pref.stylus.linenos) {
+    sourcemapsInit = () => {
       return streamUntouched();
     };
-    sourcemaps.write = () => {
+    sourcemapsWrite = () => {
       return streamUntouched();
     };
   }
 
   return gulp.src(cssSrcDir + '/stylus/*.styl')
-    .pipe(sourcemaps.init())
-    .pipe(gulpStylus(prefsStylus))
-    .pipe(sourcemaps.write(sourcemapDest, {sourceRoot}))
+    .pipe(sourcemapsInit())
+    .pipe(gulpStylus(pref.stylus))
+    .pipe(sourcemapsWrite(getSourcemapDest(), {sourceRoot}))
     .on('error', handleError)
     .pipe(gulp.dest(cssBldDir));
 });
@@ -298,12 +299,26 @@ gulp.task('stylus:frontend-copy', function (cb) {
 // This runs the CSS processor without outputting line comments.
 // You probably want this to process CSS destined for production.
 gulp.task('stylus:no-comment', function () {
-  const prefsStylusClone = Object.assign({}, prefsStylus, {linenos: false});
+  const sourceRoot = getSourceRoot();
+  let sourcemapsInit = sourcemaps.init;
+  let sourcemapsWrite = sourcemaps.write;
+
+  // Do not write sourcemaps if pref.stylus.sourcemap is falsey.
+  if (!pref.stylus.sourcemap) {
+    sourcemapsInit = () => {
+      return streamUntouched();
+    };
+    sourcemapsWrite = () => {
+      return streamUntouched();
+    };
+  }
+
+  const prefsStylusClone = Object.assign({}, pref.stylus, {linenos: false});
 
   return gulp.src(cssSrcDir + '/stylus/*.styl')
-    .pipe(sourcemaps.init())
+    .pipe(sourcemapsInit())
     .pipe(gulpStylus(prefsStylusClone))
-    .pipe(sourcemaps.write(sourcemapDest, {sourceRoot}))
+    .pipe(sourcemapsWrite(getSourcemapDest(), {sourceRoot}))
     .on('error', handleError)
     .pipe(gulp.dest(cssBldDir));
 });
