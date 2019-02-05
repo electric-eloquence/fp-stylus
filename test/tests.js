@@ -1,8 +1,7 @@
 'use strict';
 
 const fs = require('fs-extra');
-const path = require('path');
-const join = path.join;
+const {dirname, join} = require('path');
 
 const expect = require('chai').expect;
 
@@ -49,7 +48,7 @@ describe('fp-stylus', function () {
         fs.unlinkSync(styleBld);
       }
       if (fs.existsSync(styleTmp)) {
-        fs.emptyDirSync(path.dirname(styleTmp));
+        fs.emptyDirSync(dirname(styleTmp));
       }
 
       styleBldExistsBefore = fs.existsSync(styleBld);
@@ -236,7 +235,7 @@ describe('fp-stylus', function () {
       'should, if the bld CSS has line comments, compile Stylus without line comments and copy it to the backend',
       function (done) {
         if (fs.existsSync(styleBack)) {
-          fs.emptyDirSync(path.dirname(styleBack));
+          fs.emptyDirSync(dirname(styleBack));
         }
 
         styleBackExistsBefore = fs.existsSync(styleBack);
@@ -278,7 +277,7 @@ describe('fp-stylus', function () {
 
     it('should, if the bld CSS has no line comments, copy it to the backend', function (done) {
       if (fs.existsSync(styleBack)) {
-        fs.emptyDirSync(path.dirname(styleBack));
+        fs.emptyDirSync(dirname(styleBack));
       }
 
       styleBackExistsBefore = fs.existsSync(styleBack);
@@ -491,7 +490,7 @@ describe('fp-stylus', function () {
         fs.unlinkSync(styleBld);
       }
       if (fs.existsSync(styleTmp)) {
-        fs.emptyDirSync(path.dirname(styleTmp));
+        fs.emptyDirSync(dirname(styleTmp));
       }
       if (fs.existsSync(styleWatchCss)) {
         fs.unlinkSync(styleWatchCss);
@@ -540,7 +539,7 @@ describe('fp-stylus', function () {
         fs.unlinkSync(styleBld);
       }
       if (fs.existsSync(styleTmp)) {
-        fs.emptyDirSync(path.dirname(styleTmp));
+        fs.emptyDirSync(dirname(styleTmp));
       }
       if (fs.existsSync(styleWatchCss)) {
         fs.unlinkSync(styleWatchCss);
@@ -589,7 +588,7 @@ describe('fp-stylus', function () {
         fs.unlinkSync(styleBld);
       }
       if (fs.existsSync(styleTmp)) {
-        fs.emptyDirSync(path.dirname(styleTmp));
+        fs.emptyDirSync(dirname(styleTmp));
       }
       if (fs.existsSync(styleWatchCss)) {
         fs.unlinkSync(styleWatchCss);
