@@ -41,7 +41,6 @@ if (prefsStylus.linenos !== false) {
 }
 
 // If not writing sourcemaps, just have sourcemaps.init() and sourcemaps.write() pipe the stream through untouched.
-// Also, do not write sourcemaps if linenos === true, as the sourcemaps will be inaccurate and the linenos redundant.
 if (!prefsStylus.sourcemap) {
   sourcemaps.init = () => {
     return streamUntouched();
@@ -245,7 +244,7 @@ function handleError(err) {
 // Declare gulp tasks.
 
 gulp.task('stylus', function () {
-  // Do not write sourcemap if printing line comments.
+  // Do not write sourcemaps if linenos === true, as the sourcemaps will be inaccurate and the linenos redundant.
   if (prefsStylus.sourcemap && prefsStylus.linenos) {
     sourcemaps.init = () => {
       return streamUntouched();
