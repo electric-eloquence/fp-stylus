@@ -38,10 +38,27 @@ Stylus will build CSS into the `paths.source.cssBld` directory as declared in
 `patternlab-config.json`.
 
 This extension defaults toward the writing of line comments for debugging 
-purposes. If a project decision is made to style with Stylus, it would be a good 
-idea to have version control ignore CSS builds in the `source` directory. This 
-would avoid committing line comments, which could otherwise lead to a morass of 
-conflicts.
+purposes. Doing so provides an unambiguous indication that the CSS was 
+preprocessed and that direct edits to the CSS should be avoided. If a project 
+decision is made to style with Stylus, it would be a good idea to have version 
+control ignore CSS builds in the `source` directory. This would avoid committing 
+line comments, which could otherwise lead to a morass of conflicts.
+
+Another debugging alternative is writing CSS sourcemaps. (However, this will not 
+work if line comments are enabled.) Add the following to 
+your `pref.yml` file:
+
+```yaml
+stylus:
+  linenos: false
+  sourcemap: true
+```
+
+The `stylus.sourcemap` setting in `pref.yml` will accept any of the 
+<a href="http://stylus-lang.com/docs/sourcemaps.html" target="_blank">
+documented Stylus sourcemap options</a>. Just set `stylus.sourcemap` as an 
+object and configure its properties as desired. Similarly, the `stylus` 
+setting will accept any documented Stylus option and submit it to Stylus.
 
 ### Tasks
 
@@ -63,26 +80,31 @@ conflicts.
 
 #### `'stylus:no-comment'`
 * Same as `'stylus'` and `'stylus:once'` but without line comments.
+* Ignores any `stylus.linenos` setting in `pref.yml`.
 
 #### `'stylus:once'`
+* Usually under gulp task `'custom:once'`.
 * Same as `'stylus'`.
 
 #### `'stylus:watch'`
+* Usually under gulp task `'custom:watch'`.
 * Watches the `source/_styles/src/stylus` directory for a file modification.
 * Triggers a Stylus build and overwrites CSS whether or not it has direct edits.
 * Puts line comments in the CSS.
 
 #### `'stylus:watch-no-comment'`
+* Usually under gulp task `'custom:watch'`.
 * Watches the `source/_styles/src/stylus` directory for a file modification.
 * Triggers a Stylus build and overwrites CSS whether or not it has direct edits.
 * Does not put line comments in the CSS.
+* Ignores any `stylus.linenos` setting in `pref.yml`.
 
 #### `'stylus:watch-write-tmp'`
+* Usually under gulp task `'custom:watch'`.
 * Usually under gulp task `'custom:watch'`.
 * Watches the `source/_styles/src/stylus` directory for a file modification.
 * Writes the tmp file for comparing the current Stylus build with the previous 
   one.
-* Puts line comments in the CSS.
 * Overwrites CSS whether or not it has direct edits.
 
 #### `'stylus:write-tmp'`
