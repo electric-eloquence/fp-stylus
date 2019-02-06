@@ -34,7 +34,9 @@ The ([main](https://github.com/electric-eloquence/fepper)) Fepper distribution
 ships with a `source/_styles/src/stylus` directory by default. Create one if 
 there isn't one, and put all Stylus code there.
 
-Stylus will build CSS into the `paths.source.cssBld` directory as declared in 
+This extension will read one directory deep for files with a `.styl` extension. 
+Partials must be nested deeper. Stylus code will be preprocessed into CSS and 
+built into the `paths.source.cssBld` directory as declared in 
 `patternlab-config.json`.
 
 This extension defaults toward the printing of line comments for debugging 
