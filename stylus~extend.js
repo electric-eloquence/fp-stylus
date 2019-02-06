@@ -74,9 +74,14 @@ function testForComments() {
 
   while (i--) {
     const cssFileBld = `${cssBldDir}/${cssFilesBld[i]}`;
-    const stat = fs.statSync(cssFileBld);
 
     /* istanbul ignore if */
+    if (!fs.existsSync(cssFileBld)) {
+      continue;
+    }
+
+    const stat = fs.statSync(cssFileBld);
+
     if (!stat.isFile()) {
       continue;
     }
@@ -112,9 +117,9 @@ function diffThenRender(cb) {
 
   while (i--) {
     const stylFile = `${stylDir}/${stylFiles[i]}`;
-    const stylFileObj = path.parse(stylFile);
 
-    if (stylFileObj.ext !== '.styl') {
+    /* istanbul ignore if */
+    if (!fs.existsSync(stylFile)) {
       if (i === 0) {
         cb();
       }
@@ -124,8 +129,18 @@ function diffThenRender(cb) {
 
     const stat = fs.statSync(stylFile);
 
-    /* istanbul ignore if */
     if (!stat.isFile()) {
+      if (i === 0) {
+        cb();
+      }
+
+      continue;
+    }
+
+    const stylFileObj = path.parse(stylFile);
+
+    if (stylFileObj.ext !== '.styl') {
+      /* istanbul ignore if */
       if (i === 0) {
         cb();
       }
@@ -177,10 +192,15 @@ function diffThenRender(cb) {
 
               // Now, compare tmp css against bld css.
               const cssFileBld = `${cssBldDir}/${stylFileObj.name}.css`;
+              const cssFileBldExists = fs.existsSync(cssFileBld);
               const prefStylusClone = Object.assign({}, pref.stylus, {filename: stylFile});
-              const stat = fs.statSync(cssFileBld);
+              let stat;
 
-              if (stat.isFile()) {
+              if (cssFileBldExists) {
+                stat = fs.statSync(cssFileBld);
+              }
+
+              if (!cssFileBldExists || stat.isFile()) {
                 const cssOld = fs.readFileSync(cssFileBld, conf.enc);
 
                 // Only overwrite bld css if tmp css and bld css differ.
