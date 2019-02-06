@@ -92,24 +92,21 @@ setting will accept any documented Stylus option and submit it to Stylus.
 
 #### `'stylus:watch'`
 * Usually under gulp task `'custom:watch'`.
-* Watches the `source/_styles/src/stylus` directory for a file modification.
-* Triggers a Stylus build and overwrites CSS whether or not it has direct edits.
-* Prints line comments in the CSS.
+* Watches the `source/_styles/src/stylus` directory for file modifications.
+* Triggers `stylus` and overwrites CSS whether or not it has direct edits.
 
 #### `'stylus:watch-no-comment'`
 * Usually under gulp task `'custom:watch'`.
-* Watches the `source/_styles/src/stylus` directory for a file modification.
-* Triggers a Stylus build and overwrites CSS whether or not it has direct edits.
-* Does not print line comments in the CSS.
-* Ignores any `stylus.linenos` setting in `pref.yml`.
+* Watches the `source/_styles/src/stylus` directory for file modifications.
+* Triggers `stylus:no-comment` and overwrites CSS whether or not it has direct 
+  edits.
 
 #### `'stylus:watch-write-tmp'`
 * Usually under gulp task `'custom:watch'`.
-* Usually under gulp task `'custom:watch'`.
-* Watches the `source/_styles/src/stylus` directory for a file modification.
+* Watches the `source/_styles/src/stylus` directory for file modifications.
+* Triggers `stylus` and overwrites CSS whether or not it has direct edits.
 * Writes the tmp file for comparing the current Stylus build with the previous 
   one.
-* Overwrites CSS whether or not it has direct edits.
 
 #### `'stylus:write-tmp'`
 * Writes the tmp file for comparing the current Stylus build with the previous 
