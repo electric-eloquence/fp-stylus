@@ -37,7 +37,7 @@ there isn't one, and put all Stylus code there.
 Stylus will build CSS into the `paths.source.cssBld` directory as declared in 
 `patternlab-config.json`.
 
-This extension defaults toward the writing of line comments for debugging 
+This extension defaults toward the printing of line comments for debugging 
 purposes. Doing so provides an unambiguous indication that the CSS was 
 preprocessed and that direct edits to the CSS should be avoided. If a project 
 decision is made to style with Stylus, it would be a good idea to have version 
@@ -63,8 +63,10 @@ setting will accept any documented Stylus option and submit it to Stylus.
 ### Tasks
 
 #### `'stylus'`
-* Builds Stylus into CSS with line comments.
+* Builds Stylus into CSS.
 * Overwrites CSS whether or not it has direct edits.
+* Respects the `stylus.linenos` setting in `pref.yml`.
+* If `stylus.linenos` is not set, will default to printing line comments.
 
 #### `'stylus:diff-then-comment'`
 * Usually under gulp task `'custom:once'`.
@@ -72,6 +74,7 @@ setting will accept any documented Stylus option and submit it to Stylus.
 * Allows direct edits to CSS without triggering Stylus builds.
 * Allows the choice of using Stylus exclusively or not using Stylus exclusively.
 * Respects the `stylus.linenos` setting in `pref.yml`.
+* If `stylus.linenos` is not set, will default to printing line comments.
 
 #### `'stylus:frontend-copy'`
 * Usually under gulp task `'custom:frontend-copy'`.
@@ -91,13 +94,13 @@ setting will accept any documented Stylus option and submit it to Stylus.
 * Usually under gulp task `'custom:watch'`.
 * Watches the `source/_styles/src/stylus` directory for a file modification.
 * Triggers a Stylus build and overwrites CSS whether or not it has direct edits.
-* Puts line comments in the CSS.
+* Prints line comments in the CSS.
 
 #### `'stylus:watch-no-comment'`
 * Usually under gulp task `'custom:watch'`.
 * Watches the `source/_styles/src/stylus` directory for a file modification.
 * Triggers a Stylus build and overwrites CSS whether or not it has direct edits.
-* Does not put line comments in the CSS.
+* Does not print line comments in the CSS.
 * Ignores any `stylus.linenos` setting in `pref.yml`.
 
 #### `'stylus:watch-write-tmp'`
