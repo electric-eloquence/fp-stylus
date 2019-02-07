@@ -161,6 +161,9 @@ function diffThenRender(cb) {
               utils.error(err);
             }
             else {
+              // Declare bld file.
+              const cssFileBld = `${cssBldDir}/${stylFileObj.name}.css`;
+              const cssFileBldExists = fs.existsSync(cssFileBld);
               // Declare tmp file for comparison.
               const cssFileTmp = `${cssSrcDir}/.tmp/${stylFileObj.name}.css`;
               let cssFileTmpStr = '';
@@ -168,8 +171,12 @@ function diffThenRender(cb) {
               if (fs.existsSync(cssFileTmp)) {
                 cssFileTmpStr = fs.readFileSync(cssFileTmp, conf.enc);
               }
-              else {
-                // cssFileTmp probably doesn't exist on first run. Output for future comparison.
+              // We need to render Stylus if cssFileBld does not exist. This will likely be the case on the first
+              // invocation of this function if cssFileBld is not version controlled. In that case, we need to skip the
+              // next clause.
+              else if (cssFileBldExists) {
+                // In other cases where cssFileTmp does not exist, output cssFileTmp for future comparison.
+                // Set cssFileTmpStr == cssNew to skip overwriting cssFileBld.
                 fs.outputFileSync(cssFileTmp, cssNew);
                 // Exit this iteration in next block.
                 cssFileTmpStr = cssNew;
@@ -191,8 +198,6 @@ function diffThenRender(cb) {
               fs.outputFileSync(cssFileTmp, cssNew);
 
               // Now, compare tmp css against bld css.
-              const cssFileBld = `${cssBldDir}/${stylFileObj.name}.css`;
-              const cssFileBldExists = fs.existsSync(cssFileBld);
               const prefStylusClone = Object.assign({}, pref.stylus, {filename: stylFile});
               let stat;
 
@@ -201,7 +206,11 @@ function diffThenRender(cb) {
               }
 
               if (!cssFileBldExists || stat.isFile()) {
-                const cssOld = fs.readFileSync(cssFileBld, conf.enc);
+                let cssOld = '';
+
+                if (cssFileBldExists) {
+                  cssOld = fs.readFileSync(cssFileBld, conf.enc);
+                }
 
                 // Only overwrite bld css if tmp css and bld css differ.
                 if (cssNew !== cssOld) {
