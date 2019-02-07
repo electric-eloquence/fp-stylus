@@ -117,7 +117,7 @@ describe('fp-stylus', function () {
       );
     });
 
-    it('should write a sourcemap if configured to do so, and configured to not print line comments', function (done) {
+    it('should write a sourcemap file if configured to do so', function (done) {
       pref.stylus.linenos = false;
       pref.stylus.sourcemap = true;
 
@@ -143,7 +143,7 @@ describe('fp-stylus', function () {
       );
     });
 
-    it('should write a sourcemap with a custom sourceRoot if configured to so', function (done) {
+    it('should write a sourcemap file with a custom sourceRoot if configured to so', function (done) {
       pref.stylus.linenos = false;
       pref.stylus.sourcemap = {
         sourceRoot: '/foo/bar'
@@ -181,7 +181,7 @@ describe('fp-stylus', function () {
 
           expect(sourcemapExistsBefore).to.equal(false);
           expect(sourcemapExistsAfter).to.equal(false);
-          expect(sourcemapInline).to.contain('/*# sourceMappingURL=data:application/json;charset=utf8;base64,');
+          expect(sourcemapInline).to.contain('/*# sourceMappingURL=data:application/json;');
 
           pref.stylus.linenos = true;
           delete pref.stylus.sourcemap;
@@ -360,17 +360,18 @@ describe('fp-stylus', function () {
       );
     });
 
-    it('should write a sourcemap if configured to do so, and configured to not print line comments', function (done) {
+    it('should write a sourcemap file if configured to do so', function (done) {
       pref.stylus.linenos = false;
       pref.stylus.sourcemap = true;
 
-      if (fs.existsSync(styleTmp)) {
-        fs.writeFileSync(styleTmp, '');
-      }
-
       fp.runSequence(
+        // Ensure there are no comments in any .css file in the bld directory.
+        // The beforeEach() should unlink any .map file.
         'stylus:no-comment',
         () => {
+          fs.writeFileSync(styleBld, ''); // Ensure the bld file differs from the new tmp file.
+          fs.writeFileSync(styleTmp, ''); // Ensure the old tmp file differs from the new tmp file.
+
           fp.runSequence(
             'stylus:diff-then-comment',
             () => {
@@ -401,22 +402,23 @@ describe('fp-stylus', function () {
         inline: true
       };
 
-      if (fs.existsSync(styleTmp)) {
-        fs.writeFileSync(styleTmp, '');
-      }
-
       fp.runSequence(
+        // Ensure there are no comments in any .css file in the bld directory.
+        // The beforeEach() should unlink any .map file.
         'stylus:no-comment',
         () => {
+          fs.writeFileSync(styleBld, ''); // Ensure the bld file differs from the new tmp file.
+          fs.writeFileSync(styleTmp, ''); // Ensure the old tmp file differs from the new tmp file.
+
           fp.runSequence(
-            'stylus',
+            'stylus:diff-then-comment',
             () => {
               const sourcemapExistsAfter = fs.existsSync(sourcemap);
               const sourcemapInline = fs.readFileSync(styleBld, enc);
 
               expect(sourcemapExistsBefore).to.equal(false);
               expect(sourcemapExistsAfter).to.equal(false);
-              expect(sourcemapInline).to.contain('/*# sourceMappingURL=data:application/json;charset=utf8;base64,');
+              expect(sourcemapInline).to.contain('/*# sourceMappingURL=data:application/json;');
 
               pref.stylus.linenos = true;
               delete pref.stylus.sourcemap;
