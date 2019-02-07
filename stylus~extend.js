@@ -217,9 +217,8 @@ function diffThenRender(cb) {
                         else {
                           fs.outputFileSync(cssFileBld, cssNew1);
 
-                          // Only write sourcemap if not printing line comments. Stylus internally checks whether the
-                          // sourcemap is to be inline or external so there is no need for that check here.
-                          if (style.sourcemap && !prefStylusClone.linenos) {
+                          // Only write sourcemap if not printing line comments and not writing the sourcemap inline.
+                          if (style.sourcemap && !prefStylusClone.linenos && !prefStylusClone.sourcemap.inline) {
                             fs.outputFileSync(`${cssFileBld}.map`, JSON.stringify(style.sourcemap));
                           }
                         }
@@ -333,11 +332,11 @@ gulp.task('stylus:no-comment', function () {
     };
   }
 
-  const prefsStylusClone = Object.assign({}, pref.stylus, {linenos: false});
+  const prefStylusClone = Object.assign({}, pref.stylus, {linenos: false});
 
   return gulp.src(cssSrcDir + '/stylus/*.styl')
     .pipe(sourcemapsInit())
-    .pipe(gulpStylus(prefsStylusClone))
+    .pipe(gulpStylus(prefStylusClone))
     .pipe(sourcemapsWrite(getSourcemapDest(), {sourceRoot}))
     .on('error', handleError)
     .pipe(gulp.dest(cssBldDir));
