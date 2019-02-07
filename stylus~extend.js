@@ -88,7 +88,8 @@ function testForComments() {
 
     const cssOld = fs.readFileSync(cssFileBld, conf.enc);
 
-    hasComments = /^\/\* line \d+ : /m.test(cssOld) && /\.styl \*\/$/m.test(cssOld);
+    hasComments = (/^\/\* line \d+ : /m.test(cssOld) && /\.styl \*\/$/m.test(cssOld)) ||
+      /^\/\*# sourceMappingURL=/m.test(cssOld);
 
     if (hasComments) {
       break;
@@ -324,29 +325,13 @@ gulp.task('stylus:frontend-copy', function (cb) {
   }
 });
 
-// This runs the CSS processor without outputting line comments.
-// You probably want this to process CSS destined for production.
+// This renders Stylus without printing line comments. It also never writes sourcemaps.
+// You probably want this to preprocess CSS destined for production.
 gulp.task('stylus:no-comment', function () {
-  const sourceRoot = getSourceRoot();
-  let sourcemapsInit = sourcemaps.init;
-  let sourcemapsWrite = sourcemaps.write;
-
-  // Do not write sourcemaps if pref.stylus.sourcemap is falsey.
-  if (!pref.stylus.sourcemap) {
-    sourcemapsInit = () => {
-      return streamUntouched();
-    };
-    sourcemapsWrite = () => {
-      return streamUntouched();
-    };
-  }
-
   const prefStylusClone = Object.assign({}, pref.stylus, {linenos: false});
 
   return gulp.src(cssSrcDir + '/stylus/*.styl')
-    .pipe(sourcemapsInit())
     .pipe(gulpStylus(prefStylusClone))
-    .pipe(sourcemapsWrite(getSourcemapDest(), {sourceRoot}))
     .on('error', handleError)
     .pipe(gulp.dest(cssBldDir));
 });
