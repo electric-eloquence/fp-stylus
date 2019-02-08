@@ -172,12 +172,13 @@ function diffThenComment(cb) {
               // If cssFileBld does not exist (quite possibly on a fresh install where it isn't version controlled),
               // we need to render and write it. In this case, keep cssFileTmpStr empty even if cssFileTmp exists.
               if (cssFileBldExists) {
-                // For other cases, set cssFileTmpStr.
+                // For cases where it does exist, set cssFileTmpStr.
+                // In cases where cssFileTmp exists, set cssFileTmpStr to the contents of that file.
                 if (fs.existsSync(cssFileTmp)) {
                   cssFileTmpStr = fs.readFileSync(cssFileTmp, conf.enc);
                 }
+                // In cases where cssFileTmp does not exist, output cssFileTmp for future comparison.
                 else {
-                  // In other cases where cssFileTmp does not exist, output cssFileTmp for future comparison.
                   // Set cssFileTmpStr == cssNew to skip overwriting cssFileBld.
                   fs.outputFileSync(cssFileTmp, cssNew);
                   // Exit this iteration in next block.
