@@ -99,7 +99,7 @@ function testForComments() {
   return hasComments;
 }
 
-function diffThenRender(cb) {
+function diffThenComment(cb) {
   const hasComments = testForComments();
 
   if (hasComments) {
@@ -169,18 +169,20 @@ function diffThenRender(cb) {
               const cssFileTmp = `${cssSrcDir}/.tmp/${stylFileObj.name}.css`;
               let cssFileTmpStr = '';
 
-              if (fs.existsSync(cssFileTmp)) {
-                cssFileTmpStr = fs.readFileSync(cssFileTmp, conf.enc);
-              }
-              // We need to render Stylus if cssFileBld does not exist. This will likely be the case on the first
-              // invocation of this function if cssFileBld is not version controlled. In that case, we need to skip the
-              // next clause.
-              else if (cssFileBldExists) {
-                // In other cases where cssFileTmp does not exist, output cssFileTmp for future comparison.
-                // Set cssFileTmpStr == cssNew to skip overwriting cssFileBld.
-                fs.outputFileSync(cssFileTmp, cssNew);
-                // Exit this iteration in next block.
-                cssFileTmpStr = cssNew;
+              // If cssFileBld does not exist (quite possibly on a fresh install where it isn't version controlled),
+              // we need to render and write it. In this case, keep cssFileTmpStr empty even if cssFileTmp exists.
+              if (cssFileBldExists) {
+                // For other cases, set cssFileTmpStr.
+                if (fs.existsSync(cssFileTmp)) {
+                  cssFileTmpStr = fs.readFileSync(cssFileTmp, conf.enc);
+                }
+                else {
+                  // In other cases where cssFileTmp does not exist, output cssFileTmp for future comparison.
+                  // Set cssFileTmpStr == cssNew to skip overwriting cssFileBld.
+                  fs.outputFileSync(cssFileTmp, cssNew);
+                  // Exit this iteration in next block.
+                  cssFileTmpStr = cssNew;
+                }
               }
 
               // Compare newly rendered css with the contents of the tmp file.
@@ -305,7 +307,7 @@ gulp.task('stylus', function () {
 // and for users who do edit Stylus files to have Stylus render as expected.
 // Power-users should replace this with the 'stylus:once' or 'stylus:no-comment' task for better performance.
 gulp.task('stylus:diff-then-comment', function (cb) {
-  diffThenRender(cb);
+  diffThenComment(cb);
 });
 
 // 'stylus:frontend-copy' checks if there are line comments in the bld CSS.
