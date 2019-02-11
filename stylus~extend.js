@@ -25,10 +25,8 @@ if (pref.stylus.linenos !== false) {
 }
 
 function getSourcemapDest() {
-  if (pref.stylus.sourcemap) {
-    if (!pref.stylus.sourcemap.inline) {
-      return '.';
-    }
+  if (pref.stylus.sourcemap && !pref.stylus.sourcemap.inline) {
+    return '.';
   }
 
   return;
