@@ -117,6 +117,30 @@ describe('fp-stylus', function () {
       );
     });
 
+    it('should write the sourcemap inline if configured to so', function (done) {
+      pref.stylus.linenos = false;
+      pref.stylus.sourcemap = {
+        inline: true
+      };
+
+      fp.runSequence(
+        'stylus',
+        () => {
+          const sourcemapExistsAfter = fs.existsSync(sourcemap);
+          const sourcemapInline = fs.readFileSync(styleBld, enc);
+
+          expect(sourcemapExistsBefore).to.equal(false);
+          expect(sourcemapExistsAfter).to.equal(false);
+          expect(sourcemapInline).to.contain('/*# sourceMappingURL=data:application/json;');
+
+          pref.stylus.linenos = true;
+          delete pref.stylus.sourcemap;
+
+          done();
+        }
+      );
+    });
+
     it('should write a sourcemap file if configured to do so', function (done) {
       pref.stylus.linenos = false;
       pref.stylus.sourcemap = true;
@@ -158,30 +182,6 @@ describe('fp-stylus', function () {
           expect(sourcemapExistsBefore).to.equal(false);
           expect(sourcemapExistsAfter).to.equal(true);
           expect(sourcemapJson.sourceRoot).to.equal(pref.stylus.sourcemap.sourceRoot);
-
-          pref.stylus.linenos = true;
-          delete pref.stylus.sourcemap;
-
-          done();
-        }
-      );
-    });
-
-    it('should write the sourcemap inline if configured to so', function (done) {
-      pref.stylus.linenos = false;
-      pref.stylus.sourcemap = {
-        inline: true
-      };
-
-      fp.runSequence(
-        'stylus',
-        () => {
-          const sourcemapExistsAfter = fs.existsSync(sourcemap);
-          const sourcemapInline = fs.readFileSync(styleBld, enc);
-
-          expect(sourcemapExistsBefore).to.equal(false);
-          expect(sourcemapExistsAfter).to.equal(false);
-          expect(sourcemapInline).to.contain('/*# sourceMappingURL=data:application/json;');
 
           pref.stylus.linenos = true;
           delete pref.stylus.sourcemap;
