@@ -5,7 +5,7 @@ const {dirname, extname, join} = require('path');
 
 const expect = require('chai').expect;
 
-// Instantiate a gulp instance and assign it to the fp const.
+// Instantiate gulp and assign it to the fp const.
 process.env.ROOT_DIR = __dirname;
 const fp = require('fepper/tasker');
 require('../stylus~extend');
