@@ -16,6 +16,14 @@ const pref = global.pref;
 const cssBldDir = conf.ui.paths.source.cssBld;
 const cssSrcDir = conf.ui.paths.source.cssSrc;
 
+// Set up pref.stylus.
+pref.stylus = pref.stylus || {};
+
+// Opt for line comments by default.
+if (pref.stylus.linenos !== false) {
+  pref.stylus.linenos = true;
+}
+
 function getSourcemapDest() {
   if (pref.stylus.sourcemap) {
     if (!pref.stylus.sourcemap.inline) {
@@ -57,14 +65,6 @@ function streamUntouched() {
       cb();
     }
   });
-}
-
-// Set up pref.stylus.
-pref.stylus = pref.stylus || {};
-
-// Opt for line comments by default.
-if (pref.stylus.linenos !== false) {
-  pref.stylus.linenos = true;
 }
 
 function testForComments() {
