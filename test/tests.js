@@ -360,6 +360,40 @@ describe('fp-stylus', function () {
       );
     });
 
+    it('should write the sourcemap inline if configured to so', function (done) {
+      pref.stylus.linenos = false;
+      pref.stylus.sourcemap = {
+        inline: true
+      };
+
+      fp.runSequence(
+        // Ensure there are no comments in any .css file in the bld directory.
+        // The beforeEach() should unlink any .map file.
+        'stylus:no-comment',
+        () => {
+          fs.writeFileSync(styleBld, ''); // Ensure the bld file differs from the new tmp file.
+          fs.writeFileSync(styleTmp, ''); // Ensure the old tmp file differs from the new tmp file.
+
+          fp.runSequence(
+            'stylus:diff-then-comment',
+            () => {
+              const sourcemapExistsAfter = fs.existsSync(sourcemap);
+              const sourcemapInline = fs.readFileSync(styleBld, enc);
+
+              expect(sourcemapExistsBefore).to.equal(false);
+              expect(sourcemapExistsAfter).to.equal(false);
+              expect(sourcemapInline).to.contain('/*# sourceMappingURL=data:application/json;');
+
+              pref.stylus.linenos = true;
+              delete pref.stylus.sourcemap;
+
+              done();
+            }
+          );
+        }
+      );
+    });
+
     it('should write a sourcemap file if configured to do so', function (done) {
       pref.stylus.linenos = false;
       pref.stylus.sourcemap = true;
@@ -385,40 +419,6 @@ describe('fp-stylus', function () {
               expect(sourcemapJson).to.have.property('names');
               expect(sourcemapJson).to.have.property('mappings');
               expect(sourcemapJson).to.have.property('file');
-
-              pref.stylus.linenos = true;
-              delete pref.stylus.sourcemap;
-
-              done();
-            }
-          );
-        }
-      );
-    });
-
-    it('should write the sourcemap inline if configured to so', function (done) {
-      pref.stylus.linenos = false;
-      pref.stylus.sourcemap = {
-        inline: true
-      };
-
-      fp.runSequence(
-        // Ensure there are no comments in any .css file in the bld directory.
-        // The beforeEach() should unlink any .map file.
-        'stylus:no-comment',
-        () => {
-          fs.writeFileSync(styleBld, ''); // Ensure the bld file differs from the new tmp file.
-          fs.writeFileSync(styleTmp, ''); // Ensure the old tmp file differs from the new tmp file.
-
-          fp.runSequence(
-            'stylus:diff-then-comment',
-            () => {
-              const sourcemapExistsAfter = fs.existsSync(sourcemap);
-              const sourcemapInline = fs.readFileSync(styleBld, enc);
-
-              expect(sourcemapExistsBefore).to.equal(false);
-              expect(sourcemapExistsAfter).to.equal(false);
-              expect(sourcemapInline).to.contain('/*# sourceMappingURL=data:application/json;');
 
               pref.stylus.linenos = true;
               delete pref.stylus.sourcemap;
