@@ -662,7 +662,7 @@ describe('fp-stylus', function () {
       styleBldExistsBefore = fs.existsSync(styleBld);
 
       fp.runSequence(
-        'stylus',
+        'stylus:once',
         done
       );
     });
