@@ -117,7 +117,7 @@ describe('fp-stylus', function () {
       );
     });
 
-    it('should write the sourcemap inline if configured to so', function (done) {
+    it('should write a sourcemap inline if configured to so', function (done) {
       pref.stylus.linenos = false;
       pref.stylus.sourcemap = {
         inline: true
@@ -360,7 +360,7 @@ describe('fp-stylus', function () {
       );
     });
 
-    it('should write the sourcemap inline if configured to so', function (done) {
+    it('should write a sourcemap inline if configured to so', function (done) {
       pref.stylus.linenos = false;
       pref.stylus.sourcemap = {
         inline: true
