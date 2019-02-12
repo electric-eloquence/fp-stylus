@@ -133,6 +133,7 @@ describe('fp-stylus', function () {
           expect(sourcemapExistsAfter).to.equal(false);
           expect(sourcemapInline).to.contain('/*# sourceMappingURL=data:application/json;');
 
+          fs.copyFileSync(styleBld, `${conf.ui.paths.public.cssBld}/sourcemap-inline.css`);
           pref.stylus.linenos = true;
           delete pref.stylus.sourcemap;
 
@@ -159,6 +160,8 @@ describe('fp-stylus', function () {
           expect(sourcemapJson).to.have.property('mappings');
           expect(sourcemapJson).to.have.property('file');
 
+          fs.copyFileSync(styleBld, styleBld.replace(srcCssBldDir, conf.ui.paths.public.cssBld));
+          fs.copyFileSync(sourcemap, sourcemap.replace(srcCssBldDir, conf.ui.paths.public.cssBld));
           pref.stylus.linenos = true;
           delete pref.stylus.sourcemap;
 
@@ -432,8 +435,8 @@ describe('fp-stylus', function () {
   });
 
   describe('fp stylus:frontend-copy', function () {
-    const styleBackAlt = join(__dirname, 'backend/docroot/local-yml/local-yml.css');
-    const styleBldAlt = join(__dirname, 'source/_styles/bld/local-yml.css');
+    const styleBackAlt = join(__dirname, 'backend/docroot/local-pref/local-pref.css');
+    const styleBldAlt = join(__dirname, 'source/_styles/bld/local-pref.css');
     let styleBackAltExistsBefore;
     let styleBackExistsBefore;
 
