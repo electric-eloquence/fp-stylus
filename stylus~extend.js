@@ -40,12 +40,20 @@ function getSourceRoot() {
       sourceRoot = pref.stylus.sourcemap.sourceRoot;
     }
     else {
-      const uiSourceDir = conf.ui.paths.source.root;
+      const uiSourceDirRel = conf.ui.pathsRelative.source.root;
+      const cssSrcDirRel = conf.ui.pathsRelative.source.cssSrc;
 
-      if (cssSrcDir.indexOf(uiSourceDir) === 0) {
-        sourceRoot = cssSrcDir.slice(uiSourceDir.length);
-        sourceRoot += '/stylus';
+      if (cssSrcDirRel.indexOf(uiSourceDirRel) === 0) {
+        const nestedDirs = cssSrcDirRel.slice(uiSourceDirRel.length);
+        let i = nestedDirs.split('/').length;
+        sourceRoot = '';
+
+        while (i--) {
+          sourceRoot += '../';
+        }
       }
+
+      sourceRoot += `${cssSrcDirRel}/stylus`;
     }
 
     return sourceRoot;
