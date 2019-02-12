@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs-extra');
-const {dirname, extname, join} = require('path');
+const {basename, dirname, extname, join} = require('path');
 
 const expect = require('chai').expect;
 
@@ -160,8 +160,8 @@ describe('fp-stylus', function () {
           expect(sourcemapJson).to.have.property('mappings');
           expect(sourcemapJson).to.have.property('file');
 
-          fs.copyFileSync(styleBld, `${conf.ui.paths.public.cssBld}/${path.basename(styleBld)}`);
-          fs.copyFileSync(sourcemap, `${conf.ui.paths.public.cssBld}/${path.basename(sourcemap)}`);
+          fs.copyFileSync(styleBld, `${conf.ui.paths.public.cssBld}/${basename(styleBld)}`);
+          fs.copyFileSync(sourcemap, `${conf.ui.paths.public.cssBld}/${basename(sourcemap)}`);
           pref.stylus.linenos = true;
           delete pref.stylus.sourcemap;
 
