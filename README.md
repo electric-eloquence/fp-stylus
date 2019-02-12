@@ -30,9 +30,9 @@ On the command line:
 fp stylus[:subtask]
 ```
 
-The ([main](https://github.com/electric-eloquence/fepper)) Fepper distribution 
-ships with a `source/_styles/src/stylus` directory by default. Create one if 
-there isn't one, and put all Stylus code there.
+The <a href="https://github.com/electric-eloquence/fepper" target="_blank">
+main Fepper distribution</a> ships with a `source/_styles/src/stylus` directory 
+by default. Create one if there isn't one, and put all Stylus code there.
 
 This extension will read one directory deep for files with a `.styl` extension. 
 Partials must be nested deeper. Stylus code will be preprocessed into CSS and 
@@ -56,11 +56,13 @@ stylus:
   sourcemap: true
 ```
 
-The `stylus.sourcemap` setting in `pref.yml` will accept any of the 
+The `stylus.sourcemap` setting in `pref.yml` allows any of the 
 <a href="http://stylus-lang.com/docs/sourcemaps.html" target="_blank">
-documented Stylus sourcemap options</a>. Just set `stylus.sourcemap` as an 
-object and configure its properties as desired. Similarly, the `stylus` 
-setting will accept any documented Stylus option and submit it to Stylus.
+documented Stylus sourcemap options</a>. Just configure `stylus.sourcemap` as an 
+object, and set its properties as desired. Similarly, any 
+<a href="https://github.com/stevelacy/gulp-stylus" target="_blank">
+documented gulp-stylus option</a> can be configured in `pref.yml` under the 
+`stylus` setting.
 
 ### Tasks
 
