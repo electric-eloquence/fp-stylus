@@ -51,9 +51,9 @@ function getSourceRoot() {
         while (i--) {
           sourceRoot += '../';
         }
-      }
 
-      sourceRoot += `${cssSrcDirRel}/stylus`;
+        sourceRoot += `${cssSrcDirRel}/stylus`;
+      }
     }
 
     return sourceRoot;
