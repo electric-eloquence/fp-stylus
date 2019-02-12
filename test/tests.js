@@ -160,8 +160,8 @@ describe('fp-stylus', function () {
           expect(sourcemapJson).to.have.property('mappings');
           expect(sourcemapJson).to.have.property('file');
 
-          fs.copyFileSync(styleBld, styleBld.replace(srcCssBldDir, conf.ui.paths.public.cssBld));
-          fs.copyFileSync(sourcemap, sourcemap.replace(srcCssBldDir, conf.ui.paths.public.cssBld));
+          fs.copyFileSync(styleBld, `${conf.ui.paths.public.cssBld}/${path.basename(styleBld)}`);
+          fs.copyFileSync(sourcemap, `${conf.ui.paths.public.cssBld}/${path.basename(sourcemap)}`);
           pref.stylus.linenos = true;
           delete pref.stylus.sourcemap;
 
