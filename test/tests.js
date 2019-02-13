@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs-extra');
-const {basename, dirname, extname, join} = require('path');
+const {basename, dirname, extname} = require('path');
 
 const expect = require('chai').expect;
 
@@ -36,47 +36,51 @@ a:focus {
 }
 `;
 const enc = 'utf8';
-const sourcemap = join(srcCssBldDir, 'style.css.map');
-const styleBack = join(__dirname, 'backend/docroot/styles/bld/style.css');
-const styleBld = join(srcCssBldDir, 'style.css');
-const styleStylus = join(srcCssSrcDir, 'stylus/style.styl');
-const styleTmp = join(srcCssSrcDir, '.tmp/style.css');
-const styleWatchCss = join(srcCssBldDir, 'watch-fixture.css');
-const styleWatchStylus = join(srcCssSrcDir, 'stylus/watch-fixture.styl');
-const styleWatchTmp = join(srcCssSrcDir, '.tmp/watch-fixture.css');
+const styleBack = `${__dirname}/backend/docroot/styles/bld/style.css`;
+const styleBld = `${srcCssBldDir}/style.css`;
+const styleStylus = `${srcCssSrcDir}/stylus/style.styl`;
+const styleTmp = `${srcCssSrcDir}/.tmp/style.css`;
+const styleWatchCss = `${srcCssBldDir}/watch-fixture.css`;
+const styleWatchStylus = `${srcCssSrcDir}/stylus/watch-fixture.styl`;
+const styleWatchTmp = `${srcCssSrcDir}/.tmp/watch-fixture.css`;
+const sourcemap = `${styleBld}.map`;
 const stylusHtml = 'html\n  font-size: 62.5%\n';
+
+function rmSrcCssBldFiles(files) {
+  for (let file of files) {
+    if (extname(file) === '.css') {
+      fs.unlinkSync(`${srcCssBldDir}/${file}`);
+    }
+  }
+}
+
+function rmSrcCssMapFiles(files) {
+  for (let file of files) {
+    if (extname(file) === '.map') {
+      fs.unlinkSync(`${srcCssBldDir}/${file}`);
+    }
+  }
+}
 
 describe('fp-stylus', function () {
   describe('fp stylus', function () {
-    let sourcemapExistsBefore;
     let styleBldExistsBefore;
 
     before(function (done) {
-      if (fs.existsSync(styleBld)) {
-        fs.unlinkSync(styleBld);
-      }
-      if (fs.existsSync(styleTmp)) {
-        fs.emptyDirSync(dirname(styleTmp));
-      }
+      fs.readdir(srcCssBldDir, (err, files) => {
+        rmSrcCssBldFiles(files);
 
-      styleBldExistsBefore = fs.existsSync(styleBld);
-
-      fp.runSequence(
-        'stylus',
-        done
-      );
-    });
-
-    beforeEach(function () {
-      const srcCssBldFiles = fs.readdirSync(srcCssBldDir);
-
-      for (let srcCssBldFile of srcCssBldFiles) {
-        if (extname(srcCssBldFile) === '.map') {
-          fs.unlinkSync(`${srcCssBldDir}/${srcCssBldFile}`);
+        if (fs.existsSync(styleTmp)) {
+          fs.emptyDirSync(dirname(styleTmp));
         }
-      }
 
-      sourcemapExistsBefore = fs.existsSync(sourcemap);
+        styleBldExistsBefore = fs.existsSync(styleBld);
+
+        fp.runSequence(
+          'stylus',
+          done
+        );
+      });
     });
 
     it('should compile Stylus partials into a CSS file with line comments', function () {
@@ -98,100 +102,135 @@ describe('fp-stylus', function () {
       expect(styleTmpExists).to.equal(false);
     });
 
-    it('should not write a sourcemap if configured to print line comments', function (done) {
-      pref.stylus.linenos = true;
-      pref.stylus.sourcemap = true;
+    it('should accept custom options', function (done) {
+      pref.stylus.compress = true;
+      pref.stylus.linenos = false;
 
       fp.runSequence(
         'stylus',
         () => {
-          const sourcemapExistsAfter = fs.existsSync(sourcemap);
+          const styleBldCss = fs.readFileSync(styleBld, enc);
 
-          expect(sourcemapExistsBefore).to.equal(false);
-          expect(sourcemapExistsAfter).to.equal(false);
+          expect(styleBldCss).to.contain('body{background:#fff;font:1.6em/1.5 Helvetica,"Nimbus Sans L","Liberation Sans",Roboto,sans-serif;color:#333;min-height:100vh;padding-bottom:5rem;position:relative}a{color:#333;}a:hover,a:focus{color:#808080}');
 
-          delete pref.stylus.sourcemap;
+          delete pref.stylus.compress;
+          pref.stylus.linenos = true;
 
           done();
         }
       );
     });
 
-    it('should write a sourcemap inline if configured to so', function (done) {
-      pref.stylus.linenos = false;
-      pref.stylus.sourcemap = {
-        inline: true
-      };
+    describe('sourcemapping', function () {
+      let sourcemapExistsBefore;
 
-      fp.runSequence(
-        'stylus',
-        () => {
-          const sourcemapExistsAfter = fs.existsSync(sourcemap);
-          const sourcemapInline = fs.readFileSync(styleBld, enc);
+      beforeEach(function (done) {
+        fs.readdir(srcCssBldDir, (err, files) => {
+          rmSrcCssMapFiles(files);
 
-          expect(sourcemapExistsBefore).to.equal(false);
-          expect(sourcemapExistsAfter).to.equal(false);
-          expect(sourcemapInline).to.contain('/*# sourceMappingURL=data:application/json;');
-
-          fs.copyFileSync(styleBld, `${conf.ui.paths.public.cssBld}/sourcemap-inline.css`);
-          pref.stylus.linenos = true;
-          delete pref.stylus.sourcemap;
+          sourcemapExistsBefore = fs.existsSync(sourcemap);
 
           done();
-        }
-      );
-    });
+        });
+      });
 
-    it('should write a sourcemap file if configured to do so', function (done) {
-      pref.stylus.linenos = false;
-      pref.stylus.sourcemap = true;
+      it('should not write a sourcemap if configured to print line comments', function (done) {
+        pref.stylus.linenos = true;
+        pref.stylus.sourcemap = true;
 
-      fp.runSequence(
-        'stylus',
-        () => {
-          const sourcemapExistsAfter = fs.existsSync(sourcemap);
-          const sourcemapJson = fs.readJsonSync(sourcemap);
+        fp.runSequence(
+          'stylus',
+          () => {
+            const sourcemapExistsAfter = fs.existsSync(sourcemap);
+            const styleBldCss = fs.readFileSync(styleBld, enc);
 
-          expect(sourcemapExistsBefore).to.equal(false);
-          expect(sourcemapExistsAfter).to.equal(true);
-          expect(sourcemapJson).to.have.property('version');
-          expect(sourcemapJson).to.have.property('sources');
-          expect(sourcemapJson).to.have.property('names');
-          expect(sourcemapJson).to.have.property('mappings');
-          expect(sourcemapJson).to.have.property('file');
+            expect(sourcemapExistsBefore).to.equal(false);
+            expect(sourcemapExistsAfter).to.equal(false);
+            expect(styleBldCss).to.not.contain('/*# sourceMappingURL=');
 
-          fs.copyFileSync(styleBld, `${conf.ui.paths.public.cssBld}/${basename(styleBld)}`);
-          fs.copyFileSync(sourcemap, `${conf.ui.paths.public.cssBld}/${basename(sourcemap)}`);
-          pref.stylus.linenos = true;
-          delete pref.stylus.sourcemap;
+            delete pref.stylus.sourcemap;
 
-          done();
-        }
-      );
-    });
+            done();
+          }
+        );
+      });
 
-    it('should write a sourcemap file with a custom sourceRoot if configured to so', function (done) {
-      pref.stylus.linenos = false;
-      pref.stylus.sourcemap = {
-        sourceRoot: '/foo/bar'
-      };
+      it('should write a sourcemap inline if configured to so', function (done) {
+        pref.stylus.linenos = false;
+        pref.stylus.sourcemap = {
+          inline: true
+        };
 
-      fp.runSequence(
-        'stylus',
-        () => {
-          const sourcemapExistsAfter = fs.existsSync(sourcemap);
-          const sourcemapJson = fs.readJsonSync(sourcemap);
+        fp.runSequence(
+          'stylus',
+          () => {
+            const sourcemapExistsAfter = fs.existsSync(sourcemap);
+            const styleBldCss = fs.readFileSync(styleBld, enc);
 
-          expect(sourcemapExistsBefore).to.equal(false);
-          expect(sourcemapExistsAfter).to.equal(true);
-          expect(sourcemapJson.sourceRoot).to.equal(pref.stylus.sourcemap.sourceRoot);
+            expect(sourcemapExistsBefore).to.equal(false);
+            expect(sourcemapExistsAfter).to.equal(false);
+            expect(styleBldCss).to.contain('/*# sourceMappingURL=data:application/json;');
 
-          pref.stylus.linenos = true;
-          delete pref.stylus.sourcemap;
+            fs.copyFileSync(styleBld, `${conf.ui.paths.public.cssBld}/sourcemap-inline.css`);
+            pref.stylus.linenos = true;
+            delete pref.stylus.sourcemap;
 
-          done();
-        }
-      );
+            done();
+          }
+        );
+      });
+
+      it('should write a sourcemap file if configured to do so', function (done) {
+        pref.stylus.linenos = false;
+        pref.stylus.sourcemap = true;
+
+        fp.runSequence(
+          'stylus',
+          () => {
+            const sourcemapExistsAfter = fs.existsSync(sourcemap);
+            const sourcemapJson = fs.readJsonSync(sourcemap);
+
+            expect(sourcemapExistsBefore).to.equal(false);
+            expect(sourcemapExistsAfter).to.equal(true);
+            expect(sourcemapJson).to.have.property('version');
+            expect(sourcemapJson).to.have.property('sources');
+            expect(sourcemapJson).to.have.property('names');
+            expect(sourcemapJson).to.have.property('mappings');
+            expect(sourcemapJson).to.have.property('file');
+
+            fs.copyFileSync(styleBld, `${conf.ui.paths.public.cssBld}/${basename(styleBld)}`);
+            fs.copyFileSync(sourcemap, `${conf.ui.paths.public.cssBld}/${basename(sourcemap)}`);
+            pref.stylus.linenos = true;
+            delete pref.stylus.sourcemap;
+
+            done();
+          }
+        );
+      });
+
+      it('should write a sourcemap file with a custom sourceRoot if configured to so', function (done) {
+        pref.stylus.linenos = false;
+        pref.stylus.sourcemap = {
+          sourceRoot: '/foo/bar'
+        };
+
+        fp.runSequence(
+          'stylus',
+          () => {
+            const sourcemapExistsAfter = fs.existsSync(sourcemap);
+            const sourcemapJson = fs.readJsonSync(sourcemap);
+
+            expect(sourcemapExistsBefore).to.equal(false);
+            expect(sourcemapExistsAfter).to.equal(true);
+            expect(sourcemapJson.sourceRoot).to.equal(pref.stylus.sourcemap.sourceRoot);
+
+            pref.stylus.linenos = true;
+            delete pref.stylus.sourcemap;
+
+            done();
+          }
+        );
+      });
     });
   });
 
@@ -216,26 +255,22 @@ describe('fp-stylus', function () {
       );
     });
 
-    beforeEach(function () {
-      const srcCssBldFiles = fs.readdirSync(srcCssBldDir);
+    beforeEach(function (done) {
+      fs.readdir(srcCssBldDir, (err, files) => {
+        rmSrcCssMapFiles(files);
 
-      for (let srcCssBldFile of srcCssBldFiles) {
-        if (extname(srcCssBldFile) === '.map') {
-          fs.unlinkSync(`${srcCssBldDir}/${srcCssBldFile}`);
-        }
-      }
+        sourcemapExistsBefore = fs.existsSync(sourcemap);
 
-      sourcemapExistsBefore = fs.existsSync(sourcemap);
+        done();
+      });
     });
 
-    after(function () {
-      const srcCssBldFiles = fs.readdirSync(srcCssBldDir);
+    after(function (done) {
+      fs.readdir(srcCssBldDir, (err, files) => {
+        rmSrcCssMapFiles(files);
 
-      for (let srcCssBldFile of srcCssBldFiles) {
-        if (extname(srcCssBldFile) === '.map') {
-          fs.unlinkSync(`${srcCssBldDir}/${srcCssBldFile}`);
-        }
-      }
+        done();
+      });
     });
 
     it(
@@ -435,8 +470,8 @@ describe('fp-stylus', function () {
   });
 
   describe('fp stylus:frontend-copy', function () {
-    const styleBackAlt = join(__dirname, 'backend/docroot/local-pref/local-pref.css');
-    const styleBldAlt = join(__dirname, 'source/_styles/bld/local-pref.css');
+    const styleBackAlt = `${__dirname}/backend/docroot/local-pref/local-pref.css`;
+    const styleBldAlt = `${__dirname}/source/_styles/bld/local-pref.css`;
     let styleBackAltExistsBefore;
     let styleBackExistsBefore;
 
@@ -619,19 +654,20 @@ describe('fp-stylus', function () {
     let styleBldExistsBefore;
 
     before(function (done) {
-      if (fs.existsSync(styleBld)) {
-        fs.unlinkSync(styleBld);
-      }
-      if (fs.existsSync(styleTmp)) {
-        fs.unlinkSync(styleTmp);
-      }
+      fs.readdir(srcCssBldDir, (err, files) => {
+        rmSrcCssBldFiles(files);
 
-      styleBldExistsBefore = fs.existsSync(styleBld);
+        if (fs.existsSync(styleTmp)) {
+          fs.emptyDirSync(dirname(styleTmp));
+        }
 
-      fp.runSequence(
-        'stylus:no-comment',
-        done
-      );
+        styleBldExistsBefore = fs.existsSync(styleBld);
+
+        fp.runSequence(
+          'stylus:no-comment',
+          done
+        );
+      });
     });
 
     it('should compile Stylus partials into a CSS file without line comments', function () {
@@ -658,16 +694,16 @@ describe('fp-stylus', function () {
     let styleBldExistsBefore;
 
     before(function (done) {
-      if (fs.existsSync(styleBld)) {
-        fs.unlinkSync(styleBld);
-      }
+      fs.readdir(srcCssBldDir, (err, files) => {
+        rmSrcCssBldFiles(files);
 
-      styleBldExistsBefore = fs.existsSync(styleBld);
+        styleBldExistsBefore = fs.existsSync(styleBld);
 
-      fp.runSequence(
-        'stylus:once',
-        done
-      );
+        fp.runSequence(
+          'stylus:once',
+          done
+        );
+      });
     });
 
     it('should be alias for `fp stylus`', function () {
@@ -685,28 +721,31 @@ describe('fp-stylus', function () {
   });
 
   describe('fp stylus:watch', function () {
-    before(function () {
-      if (fs.existsSync(styleWatchCss)) {
-        fs.unlinkSync(styleWatchCss);
-      }
-      if (fs.existsSync(styleWatchStylus)) {
-        fs.unlinkSync(styleWatchStylus);
-      }
+    before(function (done) {
+      fs.readdir(srcCssBldDir, (err, files) => {
+        rmSrcCssBldFiles(files);
+
+        if (fs.existsSync(styleWatchStylus)) {
+          fs.unlinkSync(styleWatchStylus);
+        }
+
+        done();
+      });
     });
 
-    after(function () {
-      if (fs.existsSync(styleBld)) {
-        fs.unlinkSync(styleBld);
-      }
-      if (fs.existsSync(styleTmp)) {
-        fs.emptyDirSync(dirname(styleTmp));
-      }
-      if (fs.existsSync(styleWatchCss)) {
-        fs.unlinkSync(styleWatchCss);
-      }
-      if (fs.existsSync(styleWatchStylus)) {
-        fs.unlinkSync(styleWatchStylus);
-      }
+    after(function (done) {
+      fs.readdir(srcCssBldDir, (err, files) => {
+        rmSrcCssBldFiles(files);
+
+        if (fs.existsSync(styleTmp)) {
+          fs.emptyDirSync(dirname(styleTmp));
+        }
+        if (fs.existsSync(styleWatchStylus)) {
+          fs.unlinkSync(styleWatchStylus);
+        }
+
+        done();
+      });
     });
 
     it('should compile Stylus into bld CSS with line comments when a Stylus partial is modified', function (done) {
@@ -734,28 +773,31 @@ describe('fp-stylus', function () {
   });
 
   describe('fp stylus:watch-no-comment', function () {
-    before(function () {
-      if (fs.existsSync(styleWatchCss)) {
-        fs.unlinkSync(styleWatchCss);
-      }
-      if (fs.existsSync(styleWatchStylus)) {
-        fs.unlinkSync(styleWatchStylus);
-      }
+    before(function (done) {
+      fs.readdir(srcCssBldDir, (err, files) => {
+        rmSrcCssBldFiles(files);
+
+        if (fs.existsSync(styleWatchStylus)) {
+          fs.unlinkSync(styleWatchStylus);
+        }
+
+        done();
+      });
     });
 
-    after(function () {
-      if (fs.existsSync(styleBld)) {
-        fs.unlinkSync(styleBld);
-      }
-      if (fs.existsSync(styleTmp)) {
-        fs.emptyDirSync(dirname(styleTmp));
-      }
-      if (fs.existsSync(styleWatchCss)) {
-        fs.unlinkSync(styleWatchCss);
-      }
-      if (fs.existsSync(styleWatchStylus)) {
-        fs.unlinkSync(styleWatchStylus);
-      }
+    after(function (done) {
+      fs.readdir(srcCssBldDir, (err, files) => {
+        rmSrcCssBldFiles(files);
+
+        if (fs.existsSync(styleTmp)) {
+          fs.emptyDirSync(dirname(styleTmp));
+        }
+        if (fs.existsSync(styleWatchStylus)) {
+          fs.unlinkSync(styleWatchStylus);
+        }
+
+        done();
+      });
     });
 
     it('should compile Stylus into bld CSS without line comments when a Stylus partial is modified', function (done) {
@@ -783,28 +825,31 @@ describe('fp-stylus', function () {
   });
 
   describe('fp stylus:watch-write-tmp', function () {
-    before(function () {
-      if (fs.existsSync(styleWatchCss)) {
-        fs.unlinkSync(styleWatchCss);
-      }
-      if (fs.existsSync(styleWatchStylus)) {
-        fs.unlinkSync(styleWatchStylus);
-      }
+    before(function (done) {
+      fs.readdir(srcCssBldDir, (err, files) => {
+        rmSrcCssBldFiles(files);
+
+        if (fs.existsSync(styleWatchStylus)) {
+          fs.unlinkSync(styleWatchStylus);
+        }
+
+        done();
+      });
     });
 
-    after(function () {
-      if (fs.existsSync(styleBld)) {
-        fs.unlinkSync(styleBld);
-      }
-      if (fs.existsSync(styleTmp)) {
-        fs.emptyDirSync(dirname(styleTmp));
-      }
-      if (fs.existsSync(styleWatchCss)) {
-        fs.unlinkSync(styleWatchCss);
-      }
-      if (fs.existsSync(styleWatchStylus)) {
-        fs.unlinkSync(styleWatchStylus);
-      }
+    after(function (done) {
+      fs.readdir(srcCssBldDir, (err, files) => {
+        rmSrcCssBldFiles(files);
+
+        if (fs.existsSync(styleTmp)) {
+          fs.emptyDirSync(dirname(styleTmp));
+        }
+        if (fs.existsSync(styleWatchStylus)) {
+          fs.unlinkSync(styleWatchStylus);
+        }
+
+        done();
+      });
     });
 
     it(
