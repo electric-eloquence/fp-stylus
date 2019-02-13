@@ -286,17 +286,13 @@ describe('fp-stylus', function () {
             expect(styleBldCssBefore).to.contain(cssBody);
             expect(styleBldCssBefore).to.contain(cssA);
             expect(styleBldCssBefore).to.contain(cssPseudoClass);
-            expect(styleBldCssBefore).to.not.contain('/* line 1');
-            expect(styleBldCssBefore).to.not.contain('/* line 2');
-            expect(styleBldCssBefore).to.not.contain('/* line 3');
+            expect(styleBldCssBefore).to.not.contain('/* line ');
 
             expect(styleBldTmp).to.not.contain(cssHtml);
             expect(styleBldTmp).to.contain(cssBody);
             expect(styleBldTmp).to.contain(cssA);
             expect(styleBldTmp).to.contain(cssPseudoClass);
-            expect(styleBldTmp).to.not.contain('/* line 1');
-            expect(styleBldTmp).to.not.contain('/* line 2');
-            expect(styleBldTmp).to.not.contain('/* line 3');
+            expect(styleBldTmp).to.not.contain('/* line ');
 
             expect(styleBldCssBefore).to.equal(styleBldCssAfter);
 
@@ -321,9 +317,7 @@ describe('fp-stylus', function () {
             expect(styleBldCss).to.contain(cssBody);
             expect(styleBldCss).to.contain(cssA);
             expect(styleBldCss).to.contain(cssPseudoClass);
-            expect(styleBldCss).to.not.contain('/* line 1');
-            expect(styleBldCss).to.not.contain('/* line 2');
-            expect(styleBldCss).to.not.contain('/* line 3');
+            expect(styleBldCss).to.not.contain('/* line ');
 
             expect(styleBldTmpBefore).to.equal(styleBldTmpAfter);
 
@@ -331,9 +325,7 @@ describe('fp-stylus', function () {
             expect(styleBldTmpAfter).to.contain(cssBody);
             expect(styleBldTmpAfter).to.contain(cssA);
             expect(styleBldTmpAfter).to.contain(cssPseudoClass);
-            expect(styleBldTmpAfter).to.not.contain('/* line 1');
-            expect(styleBldTmpAfter).to.not.contain('/* line 2');
-            expect(styleBldTmpAfter).to.not.contain('/* line 3');
+            expect(styleBldTmpAfter).to.not.contain('/* line ');
 
             done();
           }
@@ -371,9 +363,7 @@ describe('fp-stylus', function () {
           expect(styleTmpCss).to.contain(cssBody);
           expect(styleTmpCss).to.contain(cssA);
           expect(styleTmpCss).to.contain(cssPseudoClass);
-          expect(styleTmpCss).to.not.contain('/* line 1');
-          expect(styleTmpCss).to.not.contain('/* line 2');
-          expect(styleTmpCss).to.not.contain('/* line 3');
+          expect(styleTmpCss).to.not.contain('/* line ');
 
           done();
         }
@@ -507,9 +497,7 @@ describe('fp-stylus', function () {
                 expect(styleBackCss).to.contain(cssBody);
                 expect(styleBackCss).to.contain(cssA);
                 expect(styleBackCss).to.contain(cssPseudoClass);
-                expect(styleBackCss).to.not.contain('/* line 1');
-                expect(styleBackCss).to.not.contain('/* line 2');
-                expect(styleBackCss).to.not.contain('/* line 3');
+                expect(styleBackCss).to.not.contain('/* line ');
 
                 done();
               }
@@ -540,18 +528,14 @@ describe('fp-stylus', function () {
               expect(styleBldCss).to.contain(cssBody);
               expect(styleBldCss).to.contain(cssA);
               expect(styleBldCss).to.contain(cssPseudoClass);
-              expect(styleBldCss).to.not.contain('/* line 1');
-              expect(styleBldCss).to.not.contain('/* line 2');
-              expect(styleBldCss).to.not.contain('/* line 3');
+              expect(styleBldCss).to.not.contain('/* line ');
 
               expect(styleBackExistsBefore).to.equal(false);
 
               expect(styleBackCss).to.contain(cssBody);
               expect(styleBackCss).to.contain(cssA);
               expect(styleBackCss).to.contain(cssPseudoClass);
-              expect(styleBackCss).to.not.contain('/* line 1');
-              expect(styleBackCss).to.not.contain('/* line 2');
-              expect(styleBackCss).to.not.contain('/* line 3');
+              expect(styleBackCss).to.not.contain('/* line ');
 
               expect(styleBldCss).to.equal(styleBackCss);
 
@@ -594,9 +578,7 @@ describe('fp-stylus', function () {
                 expect(styleBackCss).to.contain(cssBody);
                 expect(styleBackCss).to.contain(cssA);
                 expect(styleBackCss).to.contain(cssPseudoClass);
-                expect(styleBackCss).to.not.contain('/* line 1');
-                expect(styleBackCss).to.not.contain('/* line 2');
-                expect(styleBackCss).to.not.contain('/* line 3');
+                expect(styleBackCss).to.not.contain('/* line ');
 
                 done();
               }
@@ -627,18 +609,14 @@ describe('fp-stylus', function () {
               expect(styleBldCss).to.contain(cssBody);
               expect(styleBldCss).to.contain(cssA);
               expect(styleBldCss).to.contain(cssPseudoClass);
-              expect(styleBldCss).to.not.contain('/* line 1');
-              expect(styleBldCss).to.not.contain('/* line 2');
-              expect(styleBldCss).to.not.contain('/* line 3');
+              expect(styleBldCss).to.not.contain('/* line ');
 
               expect(styleBackAltExistsBefore).to.equal(false);
 
               expect(styleBackCss).to.contain(cssBody);
               expect(styleBackCss).to.contain(cssA);
               expect(styleBackCss).to.contain(cssPseudoClass);
-              expect(styleBackCss).to.not.contain('/* line 1');
-              expect(styleBackCss).to.not.contain('/* line 2');
-              expect(styleBackCss).to.not.contain('/* line 3');
+              expect(styleBackCss).to.not.contain('/* line ');
 
               expect(styleBldCss).to.equal(styleBackCss);
 
@@ -678,9 +656,7 @@ describe('fp-stylus', function () {
       expect(styleBldCss).to.contain(cssBody);
       expect(styleBldCss).to.contain(cssA);
       expect(styleBldCss).to.contain(cssPseudoClass);
-      expect(styleBldCss).to.not.contain('/* line 1');
-      expect(styleBldCss).to.not.contain('/* line 2');
-      expect(styleBldCss).to.not.contain('/* line 3');
+      expect(styleBldCss).to.not.contain('/* line ');
     });
 
     it('should not write a tmp file', function () {
@@ -813,9 +789,7 @@ describe('fp-stylus', function () {
           expect(css).to.contain(cssBody);
           expect(css).to.contain(cssA);
           expect(css).to.contain(cssPseudoClass);
-          expect(css).to.not.contain('/* line 1');
-          expect(css).to.not.contain('/* line 2');
-          expect(css).to.not.contain('/* line 3');
+          expect(css).to.not.contain('/* line ');
 
           watcher.close();
           done();
@@ -876,9 +850,7 @@ describe('fp-stylus', function () {
             expect(cssTmp).to.contain(cssBody);
             expect(cssTmp).to.contain(cssA);
             expect(cssTmp).to.contain(cssPseudoClass);
-            expect(cssTmp).to.not.contain('/* line 1');
-            expect(cssTmp).to.not.contain('/* line 2');
-            expect(cssTmp).to.not.contain('/* line 3');
+            expect(cssTmp).to.not.contain('/* line ');
 
             watcher.close();
             done();
@@ -912,9 +884,7 @@ describe('fp-stylus', function () {
       expect(styleTmpCss).to.contain(cssBody);
       expect(styleTmpCss).to.contain(cssA);
       expect(styleTmpCss).to.contain(cssPseudoClass);
-      expect(styleTmpCss).to.not.contain('/* line 1');
-      expect(styleTmpCss).to.not.contain('/* line 2');
-      expect(styleTmpCss).to.not.contain('/* line 3');
+      expect(styleTmpCss).to.not.contain('/* line ');
     });
   });
 });
