@@ -47,6 +47,7 @@
     "node": ">=8.5.0"
   },
   "dependencies": {
+    "fs-extra": "^7.0.1",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-stylus": "^2.7.0"
   },
