@@ -273,10 +273,8 @@ describe('fp-stylus', function () {
       });
     });
 
-    it(
-      'should, on first run, compile a tmp file but not overwrite the old bld file even if it differs',
-      function (done)
-    {
+    it('should, on first run, compile a tmp file but not overwrite the old bld file even if it differs\
+', function (done) {
       fp.runSequence(
         'stylus:diff-then-comment',
         () => {
@@ -302,10 +300,8 @@ describe('fp-stylus', function () {
       );
     });
 
-    it(
-      'should, on subsequent runs, not overwrite the bld file if the new tmp file does not differ from the old tmp file',
-      function (done)
-    {
+    it('should, on subsequent runs, not overwrite the bld file if the new tmp file does not differ from the old tmp \
+file', function (done) {
       const styleBldTmpBefore = fs.readFileSync(styleTmp, enc);
 
       fp.runSequence(
@@ -329,9 +325,9 @@ describe('fp-stylus', function () {
           expect(styleBldTmpAfter).to.not.contain('/* line ');
 
           done();
-        });
-      }
-    );
+        }
+      );
+    });
 
     it('should overwrite the bld file if the new tmp file differs from the old tmp file', function (done) {
       fs.copyFileSync(styleBld, styleTmp);
@@ -465,10 +461,8 @@ describe('fp-stylus', function () {
     let styleBackAltExistsBefore;
     let styleBackExistsBefore;
 
-    it(
-      'should, if the bld CSS has line comments, compile Stylus without line comments and copy it to the backend',
-      function (done)
-    {
+    it('should, if the bld CSS has line comments, compile Stylus without line comments and copy it to the backend\
+', function (done) {
       if (fs.existsSync(styleBack)) {
         fs.emptyDirSync(dirname(styleBack));
       }
@@ -546,10 +540,8 @@ describe('fp-stylus', function () {
       );
     });
 
-    it(
-      'should, if the bld CSS has line comments, compile Stylus without line comments and copy it to an alternate backend directory',
-      function (done)
-    {
+    it('should, if the bld CSS has line comments, compile Stylus without line comments and copy it to an alternate \
+backend directory', function (done) {
       if (fs.existsSync(styleBack)) {
         fs.unlinkSync(styleBackAlt);
       }
@@ -826,10 +818,8 @@ describe('fp-stylus', function () {
       });
     });
 
-    it(
-      'should run `fp stylus` when a Stylus partial is modified, but also write a tmp file to allow direct edits to the bld file',
-      function (done)
-    {
+    it('should run `fp stylus` when a Stylus partial is modified, but also write a tmp file to allow direct edits to \
+the bld file', function (done) {
       const stylus = fs.readFileSync(styleStylus, enc);
       const watcher = fp.tasks['stylus:watch-write-tmp'].fn();
 
