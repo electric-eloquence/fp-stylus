@@ -36,7 +36,7 @@
   },
   "cacheBust": true,
   "cleanPublic": false,
-  "debug": true,
+  "debug": false,
   "defaultPattern": "pages-homepage",
   "defaultShowPatternInfo": false,
   "frontMatterExtension": ".md",
