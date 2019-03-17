@@ -86,7 +86,7 @@ describe('fp-stylus', function () {
     it('should compile Stylus partials into a CSS file with line comments', function () {
       const styleBldCss = fs.readFileSync(styleBld, enc);
 
-      expect(styleBldExistsBefore).to.equal(false);
+      expect(styleBldExistsBefore).to.be.false;
 
       expect(styleBldCss).to.contain(cssBody);
       expect(styleBldCss).to.contain(cssA);
@@ -99,7 +99,7 @@ describe('fp-stylus', function () {
     it('should not write a tmp file', function () {
       const styleTmpExists = fs.existsSync(styleTmp);
 
-      expect(styleTmpExists).to.equal(false);
+      expect(styleTmpExists).to.be.false;
     });
 
     it('should accept custom options', function (done) {
@@ -144,8 +144,8 @@ describe('fp-stylus', function () {
             const sourcemapExistsAfter = fs.existsSync(sourcemap);
             const styleBldCss = fs.readFileSync(styleBld, enc);
 
-            expect(sourcemapExistsBefore).to.equal(false);
-            expect(sourcemapExistsAfter).to.equal(false);
+            expect(sourcemapExistsBefore).to.be.false;
+            expect(sourcemapExistsAfter).to.be.false;
             expect(styleBldCss).to.not.contain('/*# sourceMappingURL=');
 
             delete pref.stylus.sourcemap;
@@ -167,8 +167,8 @@ describe('fp-stylus', function () {
             const sourcemapExistsAfter = fs.existsSync(sourcemap);
             const styleBldCss = fs.readFileSync(styleBld, enc);
 
-            expect(sourcemapExistsBefore).to.equal(false);
-            expect(sourcemapExistsAfter).to.equal(false);
+            expect(sourcemapExistsBefore).to.be.false;
+            expect(sourcemapExistsAfter).to.be.false;
             expect(styleBldCss).to.contain('/*# sourceMappingURL=data:application/json;');
 
             fs.copyFileSync(styleBld, `${conf.ui.paths.public.cssBld}/sourcemap-inline.css`);
@@ -190,8 +190,8 @@ describe('fp-stylus', function () {
             const sourcemapExistsAfter = fs.existsSync(sourcemap);
             const sourcemapJson = fs.readJsonSync(sourcemap);
 
-            expect(sourcemapExistsBefore).to.equal(false);
-            expect(sourcemapExistsAfter).to.equal(true);
+            expect(sourcemapExistsBefore).to.be.false;
+            expect(sourcemapExistsAfter).to.be.true;
             expect(sourcemapJson).to.have.property('version');
             expect(sourcemapJson).to.have.property('sources');
             expect(sourcemapJson).to.have.property('names');
@@ -220,8 +220,8 @@ describe('fp-stylus', function () {
             const sourcemapExistsAfter = fs.existsSync(sourcemap);
             const sourcemapJson = fs.readJsonSync(sourcemap);
 
-            expect(sourcemapExistsBefore).to.equal(false);
-            expect(sourcemapExistsAfter).to.equal(true);
+            expect(sourcemapExistsBefore).to.be.false;
+            expect(sourcemapExistsAfter).to.be.true;
             expect(sourcemapJson.sourceRoot).to.equal(pref.stylus.sourcemap.sourceRoot);
 
             pref.stylus.linenos = true;
@@ -404,8 +404,8 @@ file', function (done) {
               const sourcemapExistsAfter = fs.existsSync(sourcemap);
               const sourcemapInline = fs.readFileSync(styleBld, enc);
 
-              expect(sourcemapExistsBefore).to.equal(false);
-              expect(sourcemapExistsAfter).to.equal(false);
+              expect(sourcemapExistsBefore).to.be.false;
+              expect(sourcemapExistsAfter).to.be.false;
               expect(sourcemapInline).to.contain('/*# sourceMappingURL=data:application/json;');
 
               pref.stylus.linenos = true;
@@ -436,8 +436,8 @@ file', function (done) {
               const sourcemapExistsAfter = fs.existsSync(sourcemap);
               const sourcemapJson = fs.readJsonSync(sourcemap);
 
-              expect(sourcemapExistsBefore).to.equal(false);
-              expect(sourcemapExistsAfter).to.equal(true);
+              expect(sourcemapExistsBefore).to.be.false;
+              expect(sourcemapExistsAfter).to.be.true;
               expect(sourcemapJson).to.have.property('version');
               expect(sourcemapJson).to.have.property('sources');
               expect(sourcemapJson).to.have.property('names');
@@ -487,7 +487,7 @@ file', function (done) {
               expect(styleBldCss).to.contain('/* line 2');
               expect(styleBldCss).to.contain('/* line 3');
 
-              expect(styleBackExistsBefore).to.equal(false);
+              expect(styleBackExistsBefore).to.be.false;
 
               expect(styleBackCss).to.contain(cssBody);
               expect(styleBackCss).to.contain(cssA);
@@ -524,7 +524,7 @@ file', function (done) {
               expect(styleBldCss).to.contain(cssPseudoClass);
               expect(styleBldCss).to.not.contain('/* line ');
 
-              expect(styleBackExistsBefore).to.equal(false);
+              expect(styleBackExistsBefore).to.be.false;
 
               expect(styleBackCss).to.contain(cssBody);
               expect(styleBackCss).to.contain(cssA);
@@ -566,7 +566,7 @@ backend directory', function (done) {
               expect(styleBldCss).to.contain('/* line 2');
               expect(styleBldCss).to.contain('/* line 3');
 
-              expect(styleBackAltExistsBefore).to.equal(false);
+              expect(styleBackAltExistsBefore).to.be.false;
 
               expect(styleBackCss).to.contain(cssBody);
               expect(styleBackCss).to.contain(cssA);
@@ -603,7 +603,7 @@ backend directory', function (done) {
               expect(styleBldCss).to.contain(cssPseudoClass);
               expect(styleBldCss).to.not.contain('/* line ');
 
-              expect(styleBackAltExistsBefore).to.equal(false);
+              expect(styleBackAltExistsBefore).to.be.false;
 
               expect(styleBackCss).to.contain(cssBody);
               expect(styleBackCss).to.contain(cssA);
@@ -643,7 +643,7 @@ backend directory', function (done) {
     it('should compile Stylus partials into a CSS file without line comments', function () {
       const styleBldCss = fs.readFileSync(styleBld, enc);
 
-      expect(styleBldExistsBefore).to.equal(false);
+      expect(styleBldExistsBefore).to.be.false;
 
       expect(styleBldCss).to.contain(cssBody);
       expect(styleBldCss).to.contain(cssA);
@@ -654,7 +654,7 @@ backend directory', function (done) {
     it('should not write a tmp file', function () {
       const styleTmpExists = fs.existsSync(styleTmp);
 
-      expect(styleTmpExists).to.equal(false);
+      expect(styleTmpExists).to.be.false;
     });
   });
 
@@ -677,7 +677,7 @@ backend directory', function (done) {
     it('should be alias for `fp stylus`', function () {
       const styleBldCss = fs.readFileSync(styleBld, enc);
 
-      expect(styleBldExistsBefore).to.equal(false);
+      expect(styleBldExistsBefore).to.be.false;
 
       expect(styleBldCss).to.contain(cssBody);
       expect(styleBldCss).to.contain(cssA);
@@ -869,7 +869,7 @@ the bld file', function (done) {
     it('should compile Stylus partials into a CSS file without line comments to the .tmp directory', function () {
       const styleTmpCss = fs.readFileSync(styleTmp, enc);
 
-      expect(styleTmpExistsBefore).to.equal(false);
+      expect(styleTmpExistsBefore).to.be.false;
 
       expect(styleTmpCss).to.contain(cssBody);
       expect(styleTmpCss).to.contain(cssA);
