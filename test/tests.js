@@ -3,7 +3,7 @@
 const fs = require('fs-extra');
 const {basename, dirname, extname} = require('path');
 
-const expect = require('chai').expect;
+const {expect} = require('chai');
 
 // Instantiate gulp and assign it to the fp const.
 process.env.ROOT_DIR = __dirname;
