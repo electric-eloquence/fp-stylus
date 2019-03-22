@@ -313,9 +313,7 @@ gulp.task('stylus', function () {
 // The intent is for users who use Fepper defaults to never render Stylus if they never edit Stylus files,
 // and for users who do edit Stylus files to have Stylus render as expected.
 // Power-users should replace this with the 'stylus:once' or 'stylus:no-comment' task for better performance.
-gulp.task('stylus:diff-then-comment', function (cb) {
-  diffThenComment(cb);
-});
+gulp.task('stylus:diff-then-comment', diffThenComment);
 
 // 'stylus:frontend-copy' checks if there are line comments in the bld CSS.
 // If there are, it renders Stylus without line comments for the full 'frontend-copy' task to copy to the backend.
