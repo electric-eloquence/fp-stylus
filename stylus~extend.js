@@ -4,7 +4,7 @@ const path = require('path');
 const {Transform} = require('stream');
 
 const fs = require('fs-extra');
-const gulp = require('gulp');
+const gulp = global.gulp || require('gulp');
 const gulpStylus = require('gulp-stylus');
 const sourcemaps = require('gulp-sourcemaps');
 const stylus = require('stylus');
