@@ -44,7 +44,7 @@
   },
   "homepage": "https://github.com/electric-eloquence/fp-stylus#readme",
   "engines": {
-    "node": ">=8.10.0"
+    "node": ">=8.16.0"
   },
   "dependencies": {
     "fs-extra": "^7.0.1",
