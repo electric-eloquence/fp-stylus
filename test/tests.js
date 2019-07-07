@@ -878,7 +878,7 @@ the bld file', function (done) {
     });
   });
 
-  describe('help text', function () {
+  describe('fp stylus:help', function () {
     it('should print help text', function (done) {
       fp.runSeq(
         'stylus:help',
