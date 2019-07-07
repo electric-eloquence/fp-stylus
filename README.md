@@ -87,7 +87,7 @@ documented gulp-stylus option</a> can be configured in `pref.yml` under the
 * If it does not, it just copies the CSS to the backend.
 
 #### `'stylus:no-comment'`
-* Same as `'stylus'` and `'stylus:once'` but without line comments.
+* Like 'stylus'` and `'stylus:once'` but without line comments.
 * Ignores any `stylus.linenos` setting in `pref.yml`.
 
 #### `'stylus:once'`

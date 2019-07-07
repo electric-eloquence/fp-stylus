@@ -877,4 +877,13 @@ the bld file', function (done) {
       expect(styleTmpCss).to.not.contain('/* line ');
     });
   });
+
+  describe('help text', function () {
+    it('should print help text', function (done) {
+      fp.runSeq(
+        'stylus:help',
+        done
+      );
+    });
+  });
 });

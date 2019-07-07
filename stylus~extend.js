@@ -171,7 +171,7 @@ function diffThenComment(cb) {
               // Declare bld file.
               const cssFileBld = `${cssBldDir}/${stylFileObj.name}.css`;
               const cssFileBldExists = fs.existsSync(cssFileBld);
-              // Declare tmp file for comparison.
+              // Declare tmp file for diffing.
               const cssFileTmp = `${cssSrcDir}/.tmp/${stylFileObj.name}.css`;
               let cssFileTmpStr = '';
 
@@ -183,7 +183,7 @@ function diffThenComment(cb) {
                 if (fs.existsSync(cssFileTmp)) {
                   cssFileTmpStr = fs.readFileSync(cssFileTmp, conf.enc);
                 }
-                // In cases where cssFileTmp does not exist, output cssFileTmp for future comparison.
+                // In cases where cssFileTmp does not exist, output cssFileTmp for future diffing.
                 else {
                   // Set cssFileTmpStr == cssNew to skip overwriting cssFileBld.
                   fs.outputFileSync(cssFileTmp, cssNew);
@@ -192,7 +192,7 @@ function diffThenComment(cb) {
                 }
               }
 
-              // Compare newly rendered css with the contents of the tmp file.
+              // Diff newly rendered css against the contents of the tmp file.
               // Exit if there has been no change. This is the case for users who only edit bld css and do not modify
               // Stylus files.
               if (cssFileTmpStr === cssNew) {
@@ -204,10 +204,10 @@ function diffThenComment(cb) {
                 return;
               }
 
-              // Output tmp file for future comparison.
+              // Output tmp file for future diffing.
               fs.outputFileSync(cssFileTmp, cssNew);
 
-              // Now, compare tmp css against bld css.
+              // Now, diff tmp css against bld css.
               const prefStylusClone = Object.assign({}, pref.stylus, {filename: stylFile});
               let stat;
 
@@ -302,10 +302,10 @@ gulp.task('stylus', function () {
 });
 
 // This first checks if the old bld CSS has line comments. If so, it runs the 'stylus' task.
-// It then renders Stylus into tmp CSS files without line comments for future comparison, and returns.
-// If the bld CSS has no line comments, it renders Stylus without line comments, to compare the new CSS with the old.
-// The first time it runs, it just writes the rendered CSS to a tmp file for future comparison.
-// On subsequent runs, it compares against the previously written tmp CSS.
+// It then renders Stylus into tmp CSS files without line comments for future diffing, and returns.
+// If the bld CSS has no line comments, it renders Stylus without line comments to diff the new CSS against the old.
+// The first time it runs, it just writes the rendered CSS to a tmp file for future diffing.
+// On subsequent runs, it diffs against the previously written tmp CSS.
 // If there's no difference, it exits for that file and moves on to the next file if there is one.
 // If there is a difference, it writes the new tmp CSS file.
 // It then checks for a difference between the new tmp CSS and the bld CSS.
@@ -368,4 +368,28 @@ gulp.task('stylus:write-tmp', function () {
     }))
     .on('error', handleError)
     .pipe(gulp.dest(`${cssSrcDir}/.tmp`));
+});
+
+gulp.task('stylus:help', function (cb) {
+  let out = `
+Fepper Stylus Extension
+
+Use:
+    <task> [<additional args>...]
+
+Tasks:
+    fp stylus                       Build Fepper's Stylus files into frontend CSS.
+    fp stylus:diff-then-comment     Only build if there is a diff against tmp file. Line comment CSS by default.
+    fp stylus:frontend-copy         Copy Stylus-built frontend CSS to backend.
+    fp stylus:no-comment            Like 'fp stylus' but without line comments.
+    fp stylus:once                  Same as 'fp stylus'.
+    fp stylus:watch                 Watch for modifications to Stylus files and build when modified.
+    fp stylus:watch-no-comment      Like 'fp stylus:watch' but without line comments.
+    fp stylus:watch-write-tmp       Like 'fp stylus:watch' but write tmp file for diffing against future builds.
+    fp stylus:write-tmp             Write tmp file for diffing against future builds.
+    fp stylus:help                  Print fp-stylus tasks and descriptions.
+`;
+
+  utils.info(out);
+  cb();
 });
