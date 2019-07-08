@@ -109,7 +109,7 @@ function diffThenComment(cb) {
   const hasComments = testForComments();
 
   if (hasComments) {
-    gulp.runSequence(
+    gulp.runSeq(
       'stylus:write-tmp',
       'stylus',
       cb
@@ -322,7 +322,7 @@ gulp.task('stylus:frontend-copy', function (cb) {
   const hasComments = testForComments();
 
   if (hasComments) {
-    gulp.runSequence(
+    gulp.runSeq(
       'stylus:no-comment',
       cb
     );
