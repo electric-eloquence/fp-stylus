@@ -76,7 +76,7 @@ describe('fp-stylus', function () {
 
         styleBldExistsBefore = fs.existsSync(styleBld);
 
-        fp.runSequence(
+        fp.runSeq(
           'stylus',
           done
         );
@@ -106,7 +106,7 @@ describe('fp-stylus', function () {
       pref.stylus.compress = true;
       pref.stylus.linenos = false;
 
-      fp.runSequence(
+      fp.runSeq(
         'stylus',
         () => {
           const styleBldCss = fs.readFileSync(styleBld, enc);
@@ -138,7 +138,7 @@ describe('fp-stylus', function () {
         pref.stylus.linenos = true;
         pref.stylus.sourcemap = true;
 
-        fp.runSequence(
+        fp.runSeq(
           'stylus',
           () => {
             const sourcemapExistsAfter = fs.existsSync(sourcemap);
@@ -161,7 +161,7 @@ describe('fp-stylus', function () {
           inline: true
         };
 
-        fp.runSequence(
+        fp.runSeq(
           'stylus',
           () => {
             const sourcemapExistsAfter = fs.existsSync(sourcemap);
@@ -184,7 +184,7 @@ describe('fp-stylus', function () {
         pref.stylus.linenos = false;
         pref.stylus.sourcemap = true;
 
-        fp.runSequence(
+        fp.runSeq(
           'stylus',
           () => {
             const sourcemapExistsAfter = fs.existsSync(sourcemap);
@@ -214,7 +214,7 @@ describe('fp-stylus', function () {
           sourceRoot: '/foo/bar'
         };
 
-        fp.runSequence(
+        fp.runSeq(
           'stylus',
           () => {
             const sourcemapExistsAfter = fs.existsSync(sourcemap);
@@ -243,7 +243,7 @@ describe('fp-stylus', function () {
         fs.unlinkSync(styleTmp);
       }
 
-      fp.runSequence(
+      fp.runSeq(
         'stylus:no-comment',
         () => {
           fs.writeFileSync(styleBld, cssHtml + fs.readFileSync(styleBld, enc));
@@ -275,7 +275,7 @@ describe('fp-stylus', function () {
 
     it('should, on first run, compile a tmp file but not overwrite the old bld file even if it differs\
 ', function (done) {
-      fp.runSequence(
+      fp.runSeq(
         'stylus:diff-then-comment',
         () => {
           const styleBldCssAfter = fs.readFileSync(styleBld, enc);
@@ -304,7 +304,7 @@ describe('fp-stylus', function () {
 file', function (done) {
       const styleBldTmpBefore = fs.readFileSync(styleTmp, enc);
 
-      fp.runSequence(
+      fp.runSeq(
         'stylus:diff-then-comment',
         () => {
           const styleBldCss = fs.readFileSync(styleBld, enc);
@@ -332,7 +332,7 @@ file', function (done) {
     it('should overwrite the bld file if the new tmp file differs from the old tmp file', function (done) {
       fs.copyFileSync(styleBld, styleTmp);
 
-      fp.runSequence(
+      fp.runSeq(
         'stylus:diff-then-comment',
         () => {
           const styleBldCss = fs.readFileSync(styleBld, enc);
@@ -351,7 +351,7 @@ file', function (done) {
     });
 
     it('should compile Stylus partials into a tmp file without line comments', function (done) {
-      fp.runSequence(
+      fp.runSeq(
         'stylus:diff-then-comment',
         () => {
           const styleTmpCss = fs.readFileSync(styleTmp, enc);
@@ -367,7 +367,7 @@ file', function (done) {
     });
 
     it('should compile Stylus partials into a bld file with line comments', function (done) {
-      fp.runSequence(
+      fp.runSeq(
         'stylus:diff-then-comment',
         () => {
           const styleBldCss = fs.readFileSync(styleBld, enc);
@@ -390,7 +390,7 @@ file', function (done) {
         inline: true
       };
 
-      fp.runSequence(
+      fp.runSeq(
         // Ensure there are no comments in any .css file in the bld directory.
         // The beforeEach() should unlink any .map file.
         'stylus:no-comment',
@@ -398,7 +398,7 @@ file', function (done) {
           fs.writeFileSync(styleBld, ''); // Ensure the bld file differs from the new tmp file.
           fs.writeFileSync(styleTmp, ''); // Ensure the old tmp file differs from the new tmp file.
 
-          fp.runSequence(
+          fp.runSeq(
             'stylus:diff-then-comment',
             () => {
               const sourcemapExistsAfter = fs.existsSync(sourcemap);
@@ -422,7 +422,7 @@ file', function (done) {
       pref.stylus.linenos = false;
       pref.stylus.sourcemap = true;
 
-      fp.runSequence(
+      fp.runSeq(
         // Ensure there are no comments in any .css file in the bld directory.
         // The beforeEach() should unlink any .map file.
         'stylus:no-comment',
@@ -430,7 +430,7 @@ file', function (done) {
           fs.writeFileSync(styleBld, ''); // Ensure the bld file differs from the new tmp file.
           fs.writeFileSync(styleTmp, ''); // Ensure the old tmp file differs from the new tmp file.
 
-          fp.runSequence(
+          fp.runSeq(
             'stylus:diff-then-comment',
             () => {
               const sourcemapExistsAfter = fs.existsSync(sourcemap);
@@ -469,12 +469,12 @@ file', function (done) {
 
       styleBackExistsBefore = fs.existsSync(styleBack);
 
-      fp.runSequence(
+      fp.runSeq(
         'stylus',
         () => {
           const styleBldCss = fs.readFileSync(styleBld, enc);
 
-          fp.runSequence(
+          fp.runSeq(
             'stylus:frontend-copy',
             'frontend-copy',
             () => {
@@ -508,12 +508,12 @@ file', function (done) {
 
       styleBackExistsBefore = fs.existsSync(styleBack);
 
-      fp.runSequence(
+      fp.runSeq(
         'stylus:no-comment',
         () => {
           const styleBldCss = fs.readFileSync(styleBld, enc);
 
-          fp.runSequence(
+          fp.runSeq(
             'stylus:frontend-copy',
             'frontend-copy',
             () => {
@@ -548,12 +548,12 @@ backend directory', function (done) {
 
       styleBackAltExistsBefore = fs.existsSync(styleBackAlt);
 
-      fp.runSequence(
+      fp.runSeq(
         'stylus',
         () => {
           const styleBldCss = fs.readFileSync(styleBldAlt, enc);
 
-          fp.runSequence(
+          fp.runSeq(
             'stylus:frontend-copy',
             'frontend-copy',
             () => {
@@ -587,12 +587,12 @@ backend directory', function (done) {
 
       styleBackAltExistsBefore = fs.existsSync(styleBackAlt);
 
-      fp.runSequence(
+      fp.runSeq(
         'stylus:no-comment',
         () => {
           const styleBldCss = fs.readFileSync(styleBldAlt, enc);
 
-          fp.runSequence(
+          fp.runSeq(
             'stylus:frontend-copy',
             'frontend-copy',
             () => {
@@ -633,7 +633,7 @@ backend directory', function (done) {
 
         styleBldExistsBefore = fs.existsSync(styleBld);
 
-        fp.runSequence(
+        fp.runSeq(
           'stylus:no-comment',
           done
         );
@@ -667,7 +667,7 @@ backend directory', function (done) {
 
         styleBldExistsBefore = fs.existsSync(styleBld);
 
-        fp.runSequence(
+        fp.runSeq(
           'stylus:once',
           done
         );
@@ -860,7 +860,7 @@ the bld file', function (done) {
 
       styleTmpExistsBefore = fs.existsSync(styleTmp);
 
-      fp.runSequence(
+      fp.runSeq(
         'stylus:write-tmp',
         done
       );
