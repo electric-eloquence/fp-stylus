@@ -280,7 +280,7 @@ gulp.task('stylus', function () {
   let sourcemapsInit = sourcemaps.init;
   let sourcemapsWrite = sourcemaps.write;
 
-  // Do not write sourcemaps if pref.stylus.sourcemap is falsey.
+  // Do not write sourcemaps if pref.stylus.sourcemap is falsy.
   // Do not write sourcemaps if linenos === true, as the sourcemaps may be inaccurate and the linenos redundant.
   if (!pref.stylus.sourcemap || pref.stylus.linenos) {
     sourcemapsInit = () => {
