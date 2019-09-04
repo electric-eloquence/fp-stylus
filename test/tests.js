@@ -111,7 +111,7 @@ describe('fp-stylus', function () {
         () => {
           const styleBldCss = fs.readFileSync(styleBld, enc);
 
-          expect(styleBldCss).to.contain('body{background:#fff;font:1.6em/1.5 Helvetica,"Nimbus Sans L","Liberation Sans",Roboto,sans-serif;color:#333;min-height:100vh;padding-bottom:5rem;position:relative}a{color:#333;}a:hover,a:focus{color:#808080}');
+          expect(styleBldCss).to.contain('body{background:#fff;font:1.6em/1.5 Helvetica,"Nimbus Sans L","Liberation Sans",Roboto,sans-serif;color:#333;min-height:100vh;padding-bottom:5rem;position:relative}a{color:#333}a:hover,a:focus{color:#808080}');
 
           delete pref.stylus.compress;
           pref.stylus.linenos = true;
