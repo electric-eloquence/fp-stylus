@@ -83,7 +83,7 @@ describe('fp-stylus', function () {
       });
     });
 
-    it('should compile Stylus partials into a CSS file with line comments', function () {
+    it('compiles Stylus partials into a CSS file with line comments', function () {
       const styleBldCss = fs.readFileSync(styleBld, enc);
 
       expect(styleBldExistsBefore).to.be.false;
@@ -96,13 +96,13 @@ describe('fp-stylus', function () {
       expect(styleBldCss).to.contain('/* line 3');
     });
 
-    it('should not write a tmp file', function () {
+    it('does not write a tmp file', function () {
       const styleTmpExists = fs.existsSync(styleTmp);
 
       expect(styleTmpExists).to.be.false;
     });
 
-    it('should accept custom options', function (done) {
+    it('accepts custom options', function (done) {
       pref.stylus.compress = true;
       pref.stylus.linenos = false;
 
@@ -134,7 +134,7 @@ describe('fp-stylus', function () {
         });
       });
 
-      it('should not write a sourcemap if configured to print line comments', function (done) {
+      it('does not write a sourcemap if configured to print line comments', function (done) {
         pref.stylus.linenos = true;
         pref.stylus.sourcemap = true;
 
@@ -155,7 +155,7 @@ describe('fp-stylus', function () {
         );
       });
 
-      it('should write a sourcemap inline if configured to so', function (done) {
+      it('writes a sourcemap inline if configured to so', function (done) {
         pref.stylus.linenos = false;
         pref.stylus.sourcemap = {
           inline: true
@@ -180,7 +180,7 @@ describe('fp-stylus', function () {
         );
       });
 
-      it('should write a sourcemap file if configured to do so', function (done) {
+      it('writes a sourcemap file if configured to do so', function (done) {
         pref.stylus.linenos = false;
         pref.stylus.sourcemap = true;
 
@@ -208,7 +208,7 @@ describe('fp-stylus', function () {
         );
       });
 
-      it('should write a sourcemap file with a custom sourceRoot if configured to so', function (done) {
+      it('writes a sourcemap file with a custom sourceRoot if configured to so', function (done) {
         pref.stylus.linenos = false;
         pref.stylus.sourcemap = {
           sourceRoot: '/foo/bar'
@@ -273,7 +273,7 @@ describe('fp-stylus', function () {
       });
     });
 
-    it('should, on first run, compile a tmp file but not overwrite the old bld file even if it differs\
+    it('on first run, compiles a tmp file but not overwrite the old bld file even if it differs\
 ', function (done) {
       fp.runSeq(
         'stylus:diff-then-comment',
@@ -300,7 +300,7 @@ describe('fp-stylus', function () {
       );
     });
 
-    it('should, on subsequent runs, not overwrite the bld file if the new tmp file does not differ from the old tmp \
+    it('on subsequent runs, does not overwrite the bld file if the new tmp file does not differ from the old tmp \
 file', function (done) {
       const styleBldTmpBefore = fs.readFileSync(styleTmp, enc);
 
@@ -329,7 +329,7 @@ file', function (done) {
       );
     });
 
-    it('should overwrite the bld file if the new tmp file differs from the old tmp file', function (done) {
+    it('overwrites the bld file if the new tmp file differs from the old tmp file', function (done) {
       fs.copyFileSync(styleBld, styleTmp);
 
       fp.runSeq(
@@ -350,7 +350,7 @@ file', function (done) {
       );
     });
 
-    it('should compile Stylus partials into a tmp file without line comments', function (done) {
+    it('compiles Stylus partials into a tmp file without line comments', function (done) {
       fp.runSeq(
         'stylus:diff-then-comment',
         () => {
@@ -366,7 +366,7 @@ file', function (done) {
       );
     });
 
-    it('should compile Stylus partials into a bld file with line comments', function (done) {
+    it('compiles Stylus partials into a bld file with line comments', function (done) {
       fp.runSeq(
         'stylus:diff-then-comment',
         () => {
@@ -384,7 +384,7 @@ file', function (done) {
       );
     });
 
-    it('should write a sourcemap inline if configured to so', function (done) {
+    it('writes a sourcemap inline if configured to so', function (done) {
       pref.stylus.linenos = false;
       pref.stylus.sourcemap = {
         inline: true
@@ -418,7 +418,7 @@ file', function (done) {
       );
     });
 
-    it('should write a sourcemap file if configured to do so', function (done) {
+    it('writes a sourcemap file if configured to do so', function (done) {
       pref.stylus.linenos = false;
       pref.stylus.sourcemap = true;
 
@@ -461,7 +461,7 @@ file', function (done) {
     let styleBackAltExistsBefore;
     let styleBackExistsBefore;
 
-    it('should, if the bld CSS has line comments, compile Stylus without line comments and copy it to the backend\
+    it('if the bld CSS has line comments, compiles Stylus without line comments and copy it to the backend\
 ', function (done) {
       if (fs.existsSync(styleBack)) {
         fs.emptyDirSync(dirname(styleBack));
@@ -501,7 +501,7 @@ file', function (done) {
       );
     });
 
-    it('should, if the bld CSS has no line comments, copy it to the backend', function (done) {
+    it('if the bld CSS has no line comments, copies it to the backend', function (done) {
       if (fs.existsSync(styleBack)) {
         fs.emptyDirSync(dirname(styleBack));
       }
@@ -540,7 +540,7 @@ file', function (done) {
       );
     });
 
-    it('should, if the bld CSS has line comments, compile Stylus without line comments and copy it to an alternate \
+    it('if the bld CSS has line comments, compiles Stylus without line comments and copy it to an alternate \
 backend directory', function (done) {
       if (fs.existsSync(styleBack)) {
         fs.unlinkSync(styleBackAlt);
@@ -580,7 +580,7 @@ backend directory', function (done) {
       );
     });
 
-    it('should, if the bld CSS has no line comments, copy it to an alternate backend directory', function (done) {
+    it('if the bld CSS has no line comments, copies it to an alternate backend directory', function (done) {
       if (fs.existsSync(styleBack)) {
         fs.unlinkSync(styleBackAlt);
       }
@@ -640,7 +640,7 @@ backend directory', function (done) {
       });
     });
 
-    it('should compile Stylus partials into a CSS file without line comments', function () {
+    it('compiles Stylus partials into a CSS file without line comments', function () {
       const styleBldCss = fs.readFileSync(styleBld, enc);
 
       expect(styleBldExistsBefore).to.be.false;
@@ -651,7 +651,7 @@ backend directory', function (done) {
       expect(styleBldCss).to.not.contain('/* line ');
     });
 
-    it('should not write a tmp file', function () {
+    it('does not write a tmp file', function () {
       const styleTmpExists = fs.existsSync(styleTmp);
 
       expect(styleTmpExists).to.be.false;
@@ -674,7 +674,7 @@ backend directory', function (done) {
       });
     });
 
-    it('should be alias for `fp stylus`', function () {
+    it('is an alias for `fp stylus`', function () {
       const styleBldCss = fs.readFileSync(styleBld, enc);
 
       expect(styleBldExistsBefore).to.be.false;
@@ -716,7 +716,7 @@ backend directory', function (done) {
       });
     });
 
-    it('should compile Stylus into bld CSS with line comments when a Stylus partial is modified', function (done) {
+    it('compiles Stylus into bld CSS with line comments when a Stylus partial is modified', function (done) {
       const stylus = fs.readFileSync(styleStylus, enc);
       const watcher = fp.tasks['stylus:watch'].fn();
 
@@ -768,7 +768,7 @@ backend directory', function (done) {
       });
     });
 
-    it('should compile Stylus into bld CSS without line comments when a Stylus partial is modified', function (done) {
+    it('compiles Stylus into bld CSS without line comments when a Stylus partial is modified', function (done) {
       const stylus = fs.readFileSync(styleStylus, enc);
       const watcher = fp.tasks['stylus:watch-no-comment'].fn();
 
@@ -818,7 +818,7 @@ backend directory', function (done) {
       });
     });
 
-    it('should run `fp stylus` when a Stylus partial is modified, but also write a tmp file to allow direct edits to \
+    it('runs `fp stylus` when a Stylus partial is modified, but also write a tmp file to allow direct edits to \
 the bld file', function (done) {
       const stylus = fs.readFileSync(styleStylus, enc);
       const watcher = fp.tasks['stylus:watch-write-tmp'].fn();
@@ -866,7 +866,7 @@ the bld file', function (done) {
       );
     });
 
-    it('should compile Stylus partials into a CSS file without line comments to the .tmp directory', function () {
+    it('compiles Stylus partials into a CSS file without line comments to the .tmp directory', function () {
       const styleTmpCss = fs.readFileSync(styleTmp, enc);
 
       expect(styleTmpExistsBefore).to.be.false;
@@ -879,7 +879,7 @@ the bld file', function (done) {
   });
 
   describe('fp stylus:help', function () {
-    it('should print help text', function (done) {
+    it('prints help text', function (done) {
       fp.runSeq(
         'stylus:help',
         done
