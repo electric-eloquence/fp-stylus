@@ -88,12 +88,12 @@ describe('fp-stylus', function () {
 
       expect(styleBldExistsBefore).to.be.false;
 
-      expect(styleBldCss).to.contain(cssBody);
-      expect(styleBldCss).to.contain(cssA);
-      expect(styleBldCss).to.contain(cssPseudoClass);
-      expect(styleBldCss).to.contain('/* line 1');
-      expect(styleBldCss).to.contain('/* line 2');
-      expect(styleBldCss).to.contain('/* line 3');
+      expect(styleBldCss).to.have.string(cssBody);
+      expect(styleBldCss).to.have.string(cssA);
+      expect(styleBldCss).to.have.string(cssPseudoClass);
+      expect(styleBldCss).to.have.string('/* line 1');
+      expect(styleBldCss).to.have.string('/* line 2');
+      expect(styleBldCss).to.have.string('/* line 3');
     });
 
     it('does not write a tmp file', function () {
@@ -111,7 +111,7 @@ describe('fp-stylus', function () {
         () => {
           const styleBldCss = fs.readFileSync(styleBld, enc);
 
-          expect(styleBldCss).to.contain('body{background:#fff;font:1.6em/1.5 Helvetica,"Nimbus Sans L","Liberation Sans",Roboto,sans-serif;color:#333;min-height:100vh;padding-bottom:5rem;position:relative}a{color:#333}a:hover,a:focus{color:#808080}');
+          expect(styleBldCss).to.have.string('body{background:#fff;font:1.6em/1.5 Helvetica,"Nimbus Sans L","Liberation Sans",Roboto,sans-serif;color:#333;min-height:100vh;padding-bottom:5rem;position:relative}a{color:#333}a:hover,a:focus{color:#808080}');
 
           delete pref.stylus.compress;
           pref.stylus.linenos = true;
@@ -146,7 +146,7 @@ describe('fp-stylus', function () {
 
             expect(sourcemapExistsBefore).to.be.false;
             expect(sourcemapExistsAfter).to.be.false;
-            expect(styleBldCss).to.not.contain('/*# sourceMappingURL=');
+            expect(styleBldCss).to.not.have.string('/*# sourceMappingURL=');
 
             delete pref.stylus.sourcemap;
 
@@ -169,7 +169,7 @@ describe('fp-stylus', function () {
 
             expect(sourcemapExistsBefore).to.be.false;
             expect(sourcemapExistsAfter).to.be.false;
-            expect(styleBldCss).to.contain('/*# sourceMappingURL=data:application/json;');
+            expect(styleBldCss).to.have.string('/*# sourceMappingURL=data:application/json;');
 
             fs.copyFileSync(styleBld, `${conf.ui.paths.public.cssBld}/sourcemap-inline.css`);
             pref.stylus.linenos = true;
@@ -281,17 +281,17 @@ describe('fp-stylus', function () {
           const styleBldCssAfter = fs.readFileSync(styleBld, enc);
           const styleBldTmp = fs.readFileSync(styleTmp, enc);
 
-          expect(styleBldCssBefore).to.contain(cssHtml);
-          expect(styleBldCssBefore).to.contain(cssBody);
-          expect(styleBldCssBefore).to.contain(cssA);
-          expect(styleBldCssBefore).to.contain(cssPseudoClass);
-          expect(styleBldCssBefore).to.not.contain('/* line ');
+          expect(styleBldCssBefore).to.have.string(cssHtml);
+          expect(styleBldCssBefore).to.have.string(cssBody);
+          expect(styleBldCssBefore).to.have.string(cssA);
+          expect(styleBldCssBefore).to.have.string(cssPseudoClass);
+          expect(styleBldCssBefore).to.not.have.string('/* line ');
 
-          expect(styleBldTmp).to.not.contain(cssHtml);
-          expect(styleBldTmp).to.contain(cssBody);
-          expect(styleBldTmp).to.contain(cssA);
-          expect(styleBldTmp).to.contain(cssPseudoClass);
-          expect(styleBldTmp).to.not.contain('/* line ');
+          expect(styleBldTmp).to.not.have.string(cssHtml);
+          expect(styleBldTmp).to.have.string(cssBody);
+          expect(styleBldTmp).to.have.string(cssA);
+          expect(styleBldTmp).to.have.string(cssPseudoClass);
+          expect(styleBldTmp).to.not.have.string('/* line ');
 
           expect(styleBldCssBefore).to.equal(styleBldCssAfter);
 
@@ -310,19 +310,19 @@ file', function (done) {
           const styleBldCss = fs.readFileSync(styleBld, enc);
           const styleBldTmpAfter = fs.readFileSync(styleTmp, enc);
 
-          expect(styleBldCss).to.contain(cssHtml);
-          expect(styleBldCss).to.contain(cssBody);
-          expect(styleBldCss).to.contain(cssA);
-          expect(styleBldCss).to.contain(cssPseudoClass);
-          expect(styleBldCss).to.not.contain('/* line ');
+          expect(styleBldCss).to.have.string(cssHtml);
+          expect(styleBldCss).to.have.string(cssBody);
+          expect(styleBldCss).to.have.string(cssA);
+          expect(styleBldCss).to.have.string(cssPseudoClass);
+          expect(styleBldCss).to.not.have.string('/* line ');
 
           expect(styleBldTmpBefore).to.equal(styleBldTmpAfter);
 
-          expect(styleBldTmpAfter).to.not.contain(cssHtml);
-          expect(styleBldTmpAfter).to.contain(cssBody);
-          expect(styleBldTmpAfter).to.contain(cssA);
-          expect(styleBldTmpAfter).to.contain(cssPseudoClass);
-          expect(styleBldTmpAfter).to.not.contain('/* line ');
+          expect(styleBldTmpAfter).to.not.have.string(cssHtml);
+          expect(styleBldTmpAfter).to.have.string(cssBody);
+          expect(styleBldTmpAfter).to.have.string(cssA);
+          expect(styleBldTmpAfter).to.have.string(cssPseudoClass);
+          expect(styleBldTmpAfter).to.not.have.string('/* line ');
 
           done();
         }
@@ -337,13 +337,13 @@ file', function (done) {
         () => {
           const styleBldCss = fs.readFileSync(styleBld, enc);
 
-          expect(styleBldCss).to.not.contain(cssHtml);
-          expect(styleBldCss).to.contain(cssBody);
-          expect(styleBldCss).to.contain(cssA);
-          expect(styleBldCss).to.contain(cssPseudoClass);
-          expect(styleBldCss).to.contain('/* line 1');
-          expect(styleBldCss).to.contain('/* line 2');
-          expect(styleBldCss).to.contain('/* line 3');
+          expect(styleBldCss).to.not.have.string(cssHtml);
+          expect(styleBldCss).to.have.string(cssBody);
+          expect(styleBldCss).to.have.string(cssA);
+          expect(styleBldCss).to.have.string(cssPseudoClass);
+          expect(styleBldCss).to.have.string('/* line 1');
+          expect(styleBldCss).to.have.string('/* line 2');
+          expect(styleBldCss).to.have.string('/* line 3');
 
           done();
         }
@@ -356,10 +356,10 @@ file', function (done) {
         () => {
           const styleTmpCss = fs.readFileSync(styleTmp, enc);
 
-          expect(styleTmpCss).to.contain(cssBody);
-          expect(styleTmpCss).to.contain(cssA);
-          expect(styleTmpCss).to.contain(cssPseudoClass);
-          expect(styleTmpCss).to.not.contain('/* line ');
+          expect(styleTmpCss).to.have.string(cssBody);
+          expect(styleTmpCss).to.have.string(cssA);
+          expect(styleTmpCss).to.have.string(cssPseudoClass);
+          expect(styleTmpCss).to.not.have.string('/* line ');
 
           done();
         }
@@ -372,12 +372,12 @@ file', function (done) {
         () => {
           const styleBldCss = fs.readFileSync(styleBld, enc);
 
-          expect(styleBldCss).to.contain(cssBody);
-          expect(styleBldCss).to.contain(cssA);
-          expect(styleBldCss).to.contain(cssPseudoClass);
-          expect(styleBldCss).to.contain('/* line 1');
-          expect(styleBldCss).to.contain('/* line 2');
-          expect(styleBldCss).to.contain('/* line 3');
+          expect(styleBldCss).to.have.string(cssBody);
+          expect(styleBldCss).to.have.string(cssA);
+          expect(styleBldCss).to.have.string(cssPseudoClass);
+          expect(styleBldCss).to.have.string('/* line 1');
+          expect(styleBldCss).to.have.string('/* line 2');
+          expect(styleBldCss).to.have.string('/* line 3');
 
           done();
         }
@@ -406,7 +406,7 @@ file', function (done) {
 
               expect(sourcemapExistsBefore).to.be.false;
               expect(sourcemapExistsAfter).to.be.false;
-              expect(sourcemapInline).to.contain('/*# sourceMappingURL=data:application/json;');
+              expect(sourcemapInline).to.have.string('/*# sourceMappingURL=data:application/json;');
 
               pref.stylus.linenos = true;
               delete pref.stylus.sourcemap;
@@ -480,19 +480,19 @@ file', function (done) {
             () => {
               const styleBackCss = fs.readFileSync(styleBack, enc);
 
-              expect(styleBldCss).to.contain(cssBody);
-              expect(styleBldCss).to.contain(cssA);
-              expect(styleBldCss).to.contain(cssPseudoClass);
-              expect(styleBldCss).to.contain('/* line 1');
-              expect(styleBldCss).to.contain('/* line 2');
-              expect(styleBldCss).to.contain('/* line 3');
+              expect(styleBldCss).to.have.string(cssBody);
+              expect(styleBldCss).to.have.string(cssA);
+              expect(styleBldCss).to.have.string(cssPseudoClass);
+              expect(styleBldCss).to.have.string('/* line 1');
+              expect(styleBldCss).to.have.string('/* line 2');
+              expect(styleBldCss).to.have.string('/* line 3');
 
               expect(styleBackExistsBefore).to.be.false;
 
-              expect(styleBackCss).to.contain(cssBody);
-              expect(styleBackCss).to.contain(cssA);
-              expect(styleBackCss).to.contain(cssPseudoClass);
-              expect(styleBackCss).to.not.contain('/* line ');
+              expect(styleBackCss).to.have.string(cssBody);
+              expect(styleBackCss).to.have.string(cssA);
+              expect(styleBackCss).to.have.string(cssPseudoClass);
+              expect(styleBackCss).to.not.have.string('/* line ');
 
               done();
             }
@@ -519,17 +519,17 @@ file', function (done) {
             () => {
               const styleBackCss = fs.readFileSync(styleBack, enc);
 
-              expect(styleBldCss).to.contain(cssBody);
-              expect(styleBldCss).to.contain(cssA);
-              expect(styleBldCss).to.contain(cssPseudoClass);
-              expect(styleBldCss).to.not.contain('/* line ');
+              expect(styleBldCss).to.have.string(cssBody);
+              expect(styleBldCss).to.have.string(cssA);
+              expect(styleBldCss).to.have.string(cssPseudoClass);
+              expect(styleBldCss).to.not.have.string('/* line ');
 
               expect(styleBackExistsBefore).to.be.false;
 
-              expect(styleBackCss).to.contain(cssBody);
-              expect(styleBackCss).to.contain(cssA);
-              expect(styleBackCss).to.contain(cssPseudoClass);
-              expect(styleBackCss).to.not.contain('/* line ');
+              expect(styleBackCss).to.have.string(cssBody);
+              expect(styleBackCss).to.have.string(cssA);
+              expect(styleBackCss).to.have.string(cssPseudoClass);
+              expect(styleBackCss).to.not.have.string('/* line ');
 
               expect(styleBldCss).to.equal(styleBackCss);
 
@@ -559,19 +559,19 @@ backend directory', function (done) {
             () => {
               const styleBackCss = fs.readFileSync(styleBackAlt, enc);
 
-              expect(styleBldCss).to.contain(cssBody);
-              expect(styleBldCss).to.contain(cssA);
-              expect(styleBldCss).to.contain(cssPseudoClass);
-              expect(styleBldCss).to.contain('/* line 1');
-              expect(styleBldCss).to.contain('/* line 2');
-              expect(styleBldCss).to.contain('/* line 3');
+              expect(styleBldCss).to.have.string(cssBody);
+              expect(styleBldCss).to.have.string(cssA);
+              expect(styleBldCss).to.have.string(cssPseudoClass);
+              expect(styleBldCss).to.have.string('/* line 1');
+              expect(styleBldCss).to.have.string('/* line 2');
+              expect(styleBldCss).to.have.string('/* line 3');
 
               expect(styleBackAltExistsBefore).to.be.false;
 
-              expect(styleBackCss).to.contain(cssBody);
-              expect(styleBackCss).to.contain(cssA);
-              expect(styleBackCss).to.contain(cssPseudoClass);
-              expect(styleBackCss).to.not.contain('/* line ');
+              expect(styleBackCss).to.have.string(cssBody);
+              expect(styleBackCss).to.have.string(cssA);
+              expect(styleBackCss).to.have.string(cssPseudoClass);
+              expect(styleBackCss).to.not.have.string('/* line ');
 
               done();
             }
@@ -598,17 +598,17 @@ backend directory', function (done) {
             () => {
               const styleBackCss = fs.readFileSync(styleBackAlt, enc);
 
-              expect(styleBldCss).to.contain(cssBody);
-              expect(styleBldCss).to.contain(cssA);
-              expect(styleBldCss).to.contain(cssPseudoClass);
-              expect(styleBldCss).to.not.contain('/* line ');
+              expect(styleBldCss).to.have.string(cssBody);
+              expect(styleBldCss).to.have.string(cssA);
+              expect(styleBldCss).to.have.string(cssPseudoClass);
+              expect(styleBldCss).to.not.have.string('/* line ');
 
               expect(styleBackAltExistsBefore).to.be.false;
 
-              expect(styleBackCss).to.contain(cssBody);
-              expect(styleBackCss).to.contain(cssA);
-              expect(styleBackCss).to.contain(cssPseudoClass);
-              expect(styleBackCss).to.not.contain('/* line ');
+              expect(styleBackCss).to.have.string(cssBody);
+              expect(styleBackCss).to.have.string(cssA);
+              expect(styleBackCss).to.have.string(cssPseudoClass);
+              expect(styleBackCss).to.not.have.string('/* line ');
 
               expect(styleBldCss).to.equal(styleBackCss);
 
@@ -645,10 +645,10 @@ backend directory', function (done) {
 
       expect(styleBldExistsBefore).to.be.false;
 
-      expect(styleBldCss).to.contain(cssBody);
-      expect(styleBldCss).to.contain(cssA);
-      expect(styleBldCss).to.contain(cssPseudoClass);
-      expect(styleBldCss).to.not.contain('/* line ');
+      expect(styleBldCss).to.have.string(cssBody);
+      expect(styleBldCss).to.have.string(cssA);
+      expect(styleBldCss).to.have.string(cssPseudoClass);
+      expect(styleBldCss).to.not.have.string('/* line ');
     });
 
     it('does not write a tmp file', function () {
@@ -679,12 +679,12 @@ backend directory', function (done) {
 
       expect(styleBldExistsBefore).to.be.false;
 
-      expect(styleBldCss).to.contain(cssBody);
-      expect(styleBldCss).to.contain(cssA);
-      expect(styleBldCss).to.contain(cssPseudoClass);
-      expect(styleBldCss).to.contain('/* line 1');
-      expect(styleBldCss).to.contain('/* line 2');
-      expect(styleBldCss).to.contain('/* line 3');
+      expect(styleBldCss).to.have.string(cssBody);
+      expect(styleBldCss).to.have.string(cssA);
+      expect(styleBldCss).to.have.string(cssPseudoClass);
+      expect(styleBldCss).to.have.string('/* line 1');
+      expect(styleBldCss).to.have.string('/* line 2');
+      expect(styleBldCss).to.have.string('/* line 3');
     });
   });
 
@@ -725,13 +725,13 @@ backend directory', function (done) {
         setTimeout(() => {
           const css = fs.readFileSync(styleWatchCss, enc);
 
-          expect(css).to.contain(cssHtml);
-          expect(css).to.contain(cssBody);
-          expect(css).to.contain(cssA);
-          expect(css).to.contain(cssPseudoClass);
-          expect(css).to.contain('/* line 1');
-          expect(css).to.contain('/* line 2');
-          expect(css).to.contain('/* line 3');
+          expect(css).to.have.string(cssHtml);
+          expect(css).to.have.string(cssBody);
+          expect(css).to.have.string(cssA);
+          expect(css).to.have.string(cssPseudoClass);
+          expect(css).to.have.string('/* line 1');
+          expect(css).to.have.string('/* line 2');
+          expect(css).to.have.string('/* line 3');
 
           watcher.close();
           done();
@@ -777,11 +777,11 @@ backend directory', function (done) {
         setTimeout(() => {
           const css = fs.readFileSync(styleWatchCss, enc);
 
-          expect(css).to.contain(cssHtml);
-          expect(css).to.contain(cssBody);
-          expect(css).to.contain(cssA);
-          expect(css).to.contain(cssPseudoClass);
-          expect(css).to.not.contain('/* line ');
+          expect(css).to.have.string(cssHtml);
+          expect(css).to.have.string(cssBody);
+          expect(css).to.have.string(cssA);
+          expect(css).to.have.string(cssPseudoClass);
+          expect(css).to.not.have.string('/* line ');
 
           watcher.close();
           done();
@@ -829,19 +829,19 @@ the bld file', function (done) {
           const cssBld = fs.readFileSync(styleWatchCss, enc);
           const cssTmp = fs.readFileSync(styleWatchTmp, enc);
 
-          expect(cssBld).to.contain(cssHtml);
-          expect(cssBld).to.contain(cssBody);
-          expect(cssBld).to.contain(cssA);
-          expect(cssBld).to.contain(cssPseudoClass);
-          expect(cssBld).to.contain('/* line 1');
-          expect(cssBld).to.contain('/* line 2');
-          expect(cssBld).to.contain('/* line 3');
+          expect(cssBld).to.have.string(cssHtml);
+          expect(cssBld).to.have.string(cssBody);
+          expect(cssBld).to.have.string(cssA);
+          expect(cssBld).to.have.string(cssPseudoClass);
+          expect(cssBld).to.have.string('/* line 1');
+          expect(cssBld).to.have.string('/* line 2');
+          expect(cssBld).to.have.string('/* line 3');
 
-          expect(cssTmp).to.contain(cssHtml);
-          expect(cssTmp).to.contain(cssBody);
-          expect(cssTmp).to.contain(cssA);
-          expect(cssTmp).to.contain(cssPseudoClass);
-          expect(cssTmp).to.not.contain('/* line ');
+          expect(cssTmp).to.have.string(cssHtml);
+          expect(cssTmp).to.have.string(cssBody);
+          expect(cssTmp).to.have.string(cssA);
+          expect(cssTmp).to.have.string(cssPseudoClass);
+          expect(cssTmp).to.not.have.string('/* line ');
 
           watcher.close();
           done();
@@ -871,10 +871,10 @@ the bld file', function (done) {
 
       expect(styleTmpExistsBefore).to.be.false;
 
-      expect(styleTmpCss).to.contain(cssBody);
-      expect(styleTmpCss).to.contain(cssA);
-      expect(styleTmpCss).to.contain(cssPseudoClass);
-      expect(styleTmpCss).to.not.contain('/* line ');
+      expect(styleTmpCss).to.have.string(cssBody);
+      expect(styleTmpCss).to.have.string(cssA);
+      expect(styleTmpCss).to.have.string(cssPseudoClass);
+      expect(styleTmpCss).to.not.have.string('/* line ');
     });
   });
 
