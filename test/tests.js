@@ -273,8 +273,7 @@ describe('fp-stylus', function () {
       });
     });
 
-    it('on first run, compiles a tmp file but not overwrite the old bld file even if it differs\
-', function (done) {
+    it('on first run, compiles a tmp file but not overwrite the old bld file even if it differs', function (done) {
       fp.runSeq(
         'stylus:diff-then-comment',
         () => {
@@ -300,8 +299,8 @@ describe('fp-stylus', function () {
       );
     });
 
-    it('on subsequent runs, does not overwrite the bld file if the new tmp file does not differ from the old tmp \
-file', function (done) {
+    it('on subsequent runs, does not overwrite the bld file if the new tmp file does not differ from the old tmp file\
+', function (done) {
       const styleBldTmpBefore = fs.readFileSync(styleTmp, enc);
 
       fp.runSeq(
@@ -540,8 +539,8 @@ file', function (done) {
       );
     });
 
-    it('if the bld CSS has line comments, compiles Stylus without line comments and copy it to an alternate \
-backend directory', function (done) {
+    it('if the bld CSS has line comments, compiles Stylus without line comments and copy it to an alternate backend \
+directory', function (done) {
       if (fs.existsSync(styleBack)) {
         fs.unlinkSync(styleBackAlt);
       }
@@ -818,8 +817,8 @@ backend directory', function (done) {
       });
     });
 
-    it('runs `fp stylus` when a Stylus partial is modified, but also write a tmp file to allow direct edits to \
-the bld file', function (done) {
+    it('runs `fp stylus` when a Stylus partial is modified, but also write a tmp file to allow direct edits to the bld \
+file', function (done) {
       const stylus = fs.readFileSync(styleStylus, enc);
       const watcher = fp.tasks['stylus:watch-write-tmp'].fn();
 
