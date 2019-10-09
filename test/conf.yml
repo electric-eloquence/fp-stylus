@@ -7,5 +7,4 @@ livereload_port: 35729
 kill_zombies: true
 
 app_dir: node_modules/fepper
-backend_dir: backend
 extend_dir: extend
