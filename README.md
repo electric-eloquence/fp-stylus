@@ -119,10 +119,10 @@ documented gulp-stylus option</a> can be configured in `pref.yml` under the
 [snyk-image]: https://snyk.io/test/github/electric-eloquence/fp-stylus/master/badge.svg
 [snyk-url]: https://snyk.io/test/github/electric-eloquence/fp-stylus/master
 
-[travis-image]: https://img.shields.io/travis/electric-eloquence/fp-stylus.svg?label=mac%20%26%20linux
+[travis-image]: https://img.shields.io/travis/electric-eloquence/fp-stylus/master.svg?label=mac%20%26%20linux
 [travis-url]: https://travis-ci.org/electric-eloquence/fp-stylus
 
-[appveyor-image]: https://img.shields.io/appveyor/ci/e2tha-e/fp-stylus.svg?label=windows
+[appveyor-image]: https://img.shields.io/appveyor/ci/e2tha-e/fp-stylus/master.svg?label=windows
 [appveyor-url]: https://ci.appveyor.com/project/e2tha-e/fp-stylus
 
 [coveralls-image]: https://img.shields.io/coveralls/electric-eloquence/fp-stylus/master.svg
