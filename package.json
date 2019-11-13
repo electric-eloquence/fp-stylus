@@ -47,9 +47,15 @@
     "node": ">=8.16.0"
   },
   "dependencies": {
+    "accord": "^0.30.0",
     "fs-extra": "^7.0.1",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-stylus": "^2.7.0"
+    "gulp-sourcemaps": "^2.6.5",
+    "lodash.assign": "^4.2.0",
+    "plugin-error": "^1.0.1",
+    "replace-ext": "^1.0.0",
+    "stylus": "^0.54.7",
+    "through2": "^3.0.1",
+    "vinyl-sourcemaps-apply": "^0.2.1"
   },
   "devDependencies": {
     "chai": "4.x",

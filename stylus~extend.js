@@ -3,12 +3,13 @@
 const path = require('path');
 const {Transform} = require('stream');
 
+const utils = require('fepper-utils');
 const fs = require('fs-extra');
 const gulp = global.gulp || require('gulp');
-const gulpStylus = require('gulp-stylus');
 const sourcemaps = require('gulp-sourcemaps');
 const stylus = require('stylus');
-const utils = require('fepper-utils');
+
+const gulpStylus = require('./gulp-stylus');
 
 const conf = global.conf;
 const pref = global.pref;
