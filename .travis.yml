@@ -4,5 +4,6 @@ os:
   - osx
 node_js:
   - "12"
+  - "13"
 after_script:
   - npm run coverage
