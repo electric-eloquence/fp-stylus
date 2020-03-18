@@ -24,6 +24,7 @@ if (pref.stylus.linenos !== false) {
 
 const cssBldDir = conf.ui.paths.source.cssBld;
 const cssSrcDir = conf.ui.paths.source.cssSrc;
+const variablesStylPath = conf.ui.paths.source.jsSrc + '/variables.styl';
 
 const streamUntouched = () => new Transform({
   readableObjectMode: true,
@@ -345,16 +346,31 @@ gulp.task('stylus:no-comment', function () {
 gulp.task('stylus:once', ['stylus']);
 
 gulp.task('stylus:watch', function () {
+  /* istanbul ignore if */
+  if (fs.existsSync(variablesStylPath)) {
+    gulp.watch(variablesStylPath, ['stylus']);
+  }
+
   // Return the watcher so it can be closed after testing.
   return gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus']);
 });
 
 gulp.task('stylus:watch-no-comment', function () {
+  /* istanbul ignore if */
+  if (fs.existsSync(variablesStylPath)) {
+    gulp.watch(variablesStylPath, ['stylus:no-comment']);
+  }
+
   // Return the watcher so it can be closed after testing.
   return gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus:no-comment']);
 });
 
 gulp.task('stylus:watch-write-tmp', function () {
+  /* istanbul ignore if */
+  if (fs.existsSync(variablesStylPath)) {
+    gulp.watch(variablesStylPath, ['stylus']);
+  }
+
   // Return the watcher so it can be closed after testing.
   return gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus:write-tmp', 'stylus']);
 });
