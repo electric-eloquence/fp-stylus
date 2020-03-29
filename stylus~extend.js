@@ -9,7 +9,7 @@ const gulp = global.gulp || require('gulp');
 const sourcemaps = require('gulp-sourcemaps');
 const stylus = require('stylus');
 
-const gulpStylus = require('./gulp-stylus');
+const gulpStylus = require('./lib/gulp-stylus');
 
 const conf = global.conf;
 const pref = global.pref;
