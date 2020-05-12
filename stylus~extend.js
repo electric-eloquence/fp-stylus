@@ -289,7 +289,6 @@ function handleError(err) {
     contents: Buffer.from(errorForBrowserInjection)
   });
 
-console.warn(file)
   this.emit('data', file);
   this.emit('end');
 }
