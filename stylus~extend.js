@@ -8,6 +8,7 @@ const fs = require('fs-extra');
 const gulp = global.gulp || require('gulp');
 const sourcemaps = require('gulp-sourcemaps');
 const stylus = require('stylus');
+const Vinyl = require('vinyl');
 
 const gulpStylus = require('./lib/gulp-stylus');
 
@@ -25,11 +26,13 @@ if (pref.stylus.linenos !== false) {
 const cssBldDir = conf.ui.paths.source.cssBld;
 const cssSrcDir = conf.ui.paths.source.cssSrc;
 const variablesStylPath = conf.ui.paths.source.jsSrc + '/variables.styl';
+let vinylPath;
 
 const streamUntouched = () => new Transform({
   readableObjectMode: true,
   writableObjectMode: true,
   transform(file, enc, cb) {
+    vinylPath = file.path;
     this.push(file);
     cb();
   }
@@ -268,10 +271,29 @@ function diffThenComment(cb) {
   }
 }
 
+let errorsForBrowserInjection = '';
+
 function handleError(err) {
-  /* istanbul ignore next */
-  utils.error(err.toString());
-  /* istanbul ignore next */
+  utils.error(err);
+
+  let errStr = err.toString();
+  errStr = errStr.slice(errStr.indexOf('\n') + 1);
+  errStr = errStr.replace(/\n/g, '\\A ');
+  errStr = 'body::before{color:red;content:\'' + errStr + '\';white-space:pre;}\n';
+
+  errorsForBrowserInjection += errStr;
+
+  const cwd = global.rootDir;
+  const vPath = (vinylPath.slice(0, vinylPath.lastIndexOf('.')) + '.css').replace(cwd, '');
+  const base = path.dirname(vPath)
+  const file = new Vinyl({
+    cwd,
+    base,
+    path: vPath,
+    contents: Buffer.from(errorsForBrowserInjection)
+  });
+
+  this.emit('data', file);
   this.emit('end');
 }
 
@@ -296,8 +318,8 @@ gulp.task('stylus', function () {
   return gulp.src(cssSrcDir + '/stylus/*.styl')
     .pipe(sourcemapsInit())
     .pipe(gulpStylus(pref.stylus))
-    .pipe(sourcemapsWrite(getSourcemapDest(), {sourceRoot}))
     .on('error', handleError)
+    .pipe(sourcemapsWrite(getSourcemapDest(), {sourceRoot}))
     .pipe(gulp.dest(cssBldDir));
 });
 
@@ -376,12 +398,13 @@ gulp.task('stylus:watch-write-tmp', function () {
 });
 
 // This outputs tmp files without line comments to check for modifications to Stylus code.
-gulp.task('stylus:write-tmp', function () {
+gulp.task('stylus:write-tmp', function (done) {
   return gulp.src(cssSrcDir + '/stylus/*.styl')
+    .pipe(streamUntouched())
     .pipe(gulpStylus({
       linenos: false
     }))
-    .on('error', handleError)
+    .on('error', done)
     .pipe(gulp.dest(`${cssSrcDir}/.tmp`));
 });
 
