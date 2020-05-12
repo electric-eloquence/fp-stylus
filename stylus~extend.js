@@ -271,17 +271,13 @@ function diffThenComment(cb) {
   }
 }
 
-let errorsForBrowserInjection = '';
-
 function handleError(err) {
   utils.error(err);
 
-  let errStr = err.toString();
-  errStr = errStr.slice(errStr.indexOf('\n') + 1);
-  errStr = errStr.replace(/\n/g, '\\A ');
-  errStr = 'body::before{color:red;content:\'' + errStr + '\';white-space:pre;}\n';
-
-  errorsForBrowserInjection += errStr;
+  let errorForBrowserInjection = err.toString();
+  errorForBrowserInjection = errorForBrowserInjection.slice(errorForBrowserInjection.indexOf('\n') + 1);
+  errorForBrowserInjection = errorForBrowserInjection.replace(/\n/g, '\\A ');
+  errorForBrowserInjection = 'body::before{color:red;content:\'' + errorForBrowserInjection + '\';white-space:pre;}\n';
 
   const cwd = global.rootDir;
   const vPath = (vinylPath.slice(0, vinylPath.lastIndexOf('.')) + '.css').replace(cwd, '');
@@ -290,7 +286,7 @@ function handleError(err) {
     cwd,
     base,
     path: vPath,
-    contents: Buffer.from(errorsForBrowserInjection)
+    contents: Buffer.from(errorForBrowserInjection)
   });
 
   this.emit('data', file);
