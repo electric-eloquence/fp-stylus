@@ -281,7 +281,7 @@ function handleError(err) {
 
   const cwd = global.rootDir;
   const vPath = (vinylPath.slice(0, vinylPath.lastIndexOf('.')) + '.css').replace(cwd, '');
-  const base = path.dirname(vPath)
+  const base = path.dirname(vPath);
   const file = new Vinyl({
     cwd,
     base,
