@@ -400,7 +400,7 @@ gulp.task('stylus:write-tmp', function (done) {
     .pipe(gulpStylus({
       linenos: false
     }))
-    .on('error', done)
+    .on('error', function () {this.emit('end');})
     .pipe(gulp.dest(`${cssSrcDir}/.tmp`));
 });
 
