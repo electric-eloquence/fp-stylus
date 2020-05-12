@@ -885,4 +885,45 @@ file', function (done) {
       );
     });
   });
+
+  describe('error handling', function () {
+    it('broken top-level Stylus files log error messages to browser', function (done) {
+      const styleBrokenBld = `${srcCssBldDir}/broken.css`;
+      const styleBrokenBldExistsBefore = fs.existsSync(styleBrokenBld);
+
+      fp.runSeq(
+        'stylus:test-broken',
+        () => {
+          const styleBrokenCss = fs.readFileSync(styleBrokenBld, enc);
+
+          expect(styleBrokenBldExistsBefore).to.be.false;
+
+          expect(styleBrokenCss).to.include('body::before{color:red;content:\'Message:\\A     ');
+          expect(styleBrokenCss).to.include('/test/source/_styles/src/broken/broken.styl:3:1\\A    1| body\\A    2| color: black\\A    3| \\A ------^\\A \\A expected "indent", got "eos"\\A \';white-space:pre;}\n');
+
+          done();
+        }
+      );
+    });
+
+    it('broken Stylus partials log error messages to browser', function (done) {
+      const styleBrokenBld = `${srcCssBldDir}/broken-partial.css`;
+      const styleBrokenBldExistsBefore = fs.existsSync(styleBrokenBld);
+
+      fp.runSeq(
+        'stylus:test-broken-partial',
+        () => {
+          const styleBrokenCss = fs.readFileSync(styleBrokenBld, enc);
+
+          expect(styleBrokenBldExistsBefore).to.be.false;
+
+          expect(styleBrokenCss).to.include('body::before{color:red;content:\'Message:\\A     ');
+          expect(styleBrokenCss).to.include('/test/source/_styles/src/broken/partials/broken-partial.styl:1:9\\A    1| @import \'missing/partial\'\\A --------------^\\A    2| \\A \\A failed to locate @import file missing/partial.styl\\A \\A Details:\\A     lineno: 1\\A     column: 9\\A     filename: ');
+          expect(styleBrokenCss).to.include('/test/source/_styles/src/broken/partials/broken-partial.styl\\A     stylusStack: \\A \';white-space:pre;}\n');
+
+          done();
+        }
+      );
+    });
+  });
 });

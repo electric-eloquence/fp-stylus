@@ -289,6 +289,7 @@ function handleError(err) {
     contents: Buffer.from(errorForBrowserInjection)
   });
 
+console.warn(file)
   this.emit('data', file);
   this.emit('end');
 }
@@ -356,6 +357,7 @@ gulp.task('stylus:no-comment', function () {
   const prefStylusClone = Object.assign({}, pref.stylus, {linenos: false});
 
   return gulp.src(cssSrcDir + '/stylus/*.styl')
+    .pipe(streamUntouched())
     .pipe(gulpStylus(prefStylusClone))
     .on('error', handleError)
     .pipe(gulp.dest(cssBldDir));
@@ -396,7 +398,6 @@ gulp.task('stylus:watch-write-tmp', function () {
 // This outputs tmp files without line comments to check for modifications to Stylus code.
 gulp.task('stylus:write-tmp', function (done) {
   return gulp.src(cssSrcDir + '/stylus/*.styl')
-    .pipe(streamUntouched())
     .pipe(gulpStylus({
       linenos: false
     }))
@@ -427,3 +428,21 @@ Tasks:
   utils.info(out);
   cb();
 });
+
+if (fs.existsSync(cssSrcDir + '/broken')) {
+  gulp.task('stylus:test-broken', function () {
+    return gulp.src(cssSrcDir + '/broken/broken.styl')
+      .pipe(streamUntouched())
+      .pipe(gulpStylus(pref.stylus))
+      .on('error', handleError)
+      .pipe(gulp.dest(cssBldDir));
+  });
+
+  gulp.task('stylus:test-broken-partial', function () {
+    return gulp.src(cssSrcDir + '/broken/broken-partial.styl')
+      .pipe(streamUntouched())
+      .pipe(gulpStylus(pref.stylus))
+      .on('error', handleError)
+      .pipe(gulp.dest(cssBldDir));
+  });
+}
