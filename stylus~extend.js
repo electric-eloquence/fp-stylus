@@ -26,7 +26,7 @@ if (pref.stylus.linenos !== false) {
 const cssBldDir = conf.ui.paths.source.cssBld;
 const cssSrcDir = conf.ui.paths.source.cssSrc;
 const variablesStylPath = conf.ui.paths.source.jsSrc + '/variables.styl';
-let vinylPath;
+let vinylPath; // Defined in streamUntouched() to be used in handleError().
 
 const streamUntouched = () => new Transform({
   readableObjectMode: true,
