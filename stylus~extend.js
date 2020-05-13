@@ -401,7 +401,7 @@ gulp.task('stylus:write-tmp', function () {
     .pipe(gulpStylus({
       linenos: false
     }))
-    .on('error', function () {this.emit('end');})
+    .on('error', function () /* istanbul ignore next */ {this.emit('end');})
     .pipe(gulp.dest(`${cssSrcDir}/.tmp`));
 });
 

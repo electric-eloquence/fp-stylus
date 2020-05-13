@@ -918,7 +918,7 @@ file', function (done) {
           expect(styleBrokenBldExistsBefore).to.be.false;
 
           expect(styleBrokenCss).to.include('body::before{color:red;content:\'Message:\\A     ');
-          expect(styleBrokenCss).to.include('broken-partial.styl:1:9\\A    1| @import \'missing/partial\'\\A --------------^\\A    2| \\A \\A failed to locate @import file missing/partial.styl\\A \\A Details:\\A     lineno: 1\\A     column: 9\\A     filename: ');
+          expect(styleBrokenCss).to.include('broken-partial.styl:1:9\\A    1| @import \\\'missing/partial\\\'\\A --------------^\\A    2| \\A \\A failed to locate @import file missing/partial.styl\\A \\A Details:\\A     lineno: 1\\A     column: 9\\A     filename: ');
           expect(styleBrokenCss).to.include('broken-partial.styl\\A     stylusStack: \\A \';white-space:pre;}\n');
 
           done();
