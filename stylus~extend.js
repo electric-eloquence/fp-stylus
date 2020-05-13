@@ -277,6 +277,7 @@ function handleError(err) {
   let errorForBrowserInjection = err.toString();
   errorForBrowserInjection = errorForBrowserInjection.slice(errorForBrowserInjection.indexOf('\n') + 1);
   errorForBrowserInjection = errorForBrowserInjection.replace(/\n/g, '\\A ');
+  errorForBrowserInjection = errorForBrowserInjection.replace(/'/g, '\\\'');
   errorForBrowserInjection = 'body::before{color:red;content:\'' + errorForBrowserInjection + '\';white-space:pre;}\n';
 
   const cwd = global.rootDir;
