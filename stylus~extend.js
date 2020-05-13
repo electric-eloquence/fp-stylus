@@ -396,7 +396,7 @@ gulp.task('stylus:watch-write-tmp', function () {
 });
 
 // This outputs tmp files without line comments to check for modifications to Stylus code.
-gulp.task('stylus:write-tmp', function (done) {
+gulp.task('stylus:write-tmp', function () {
   return gulp.src(cssSrcDir + '/stylus/*.styl')
     .pipe(gulpStylus({
       linenos: false
