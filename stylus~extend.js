@@ -276,7 +276,7 @@ function handleError(err) {
 
   let errorForBrowserInjection = err.toString();
   errorForBrowserInjection = errorForBrowserInjection.slice(errorForBrowserInjection.indexOf('\n') + 1);
-  errorForBrowserInjection = errorForBrowserInjection.replace(/\\/g, '\\\\'); // Render Windows file paths.
+  errorForBrowserInjection = errorForBrowserInjection.replace(/\\/g, '/'); // Render Windows file paths.
   errorForBrowserInjection = errorForBrowserInjection.replace(/\n/g, '\\A '); // Render line feeds.
   errorForBrowserInjection = errorForBrowserInjection.replace(/'/g, '\\\''); // Escape internal single-quotes.
   errorForBrowserInjection = 'body::before{color:red;content:\'' + errorForBrowserInjection + '\';white-space:pre;}\n';
