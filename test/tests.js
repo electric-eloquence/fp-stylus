@@ -898,7 +898,7 @@ file', function (done) {
 
           expect(styleBrokenBldExistsBefore).to.be.false;
 
-          expect(styleBrokenCss).to.include('body::before{color:red;content:\'Message:\\A     ');
+          expect(styleBrokenCss).to.include('body::before{background-color:white;color:red;content:\'Message:\\A     ');
           expect(styleBrokenCss).to.include('broken.styl:3:1\\A    1| body\\A    2| color: black\\A    3| \\A ------^\\A \\A expected "indent", got "eos"\\A \';white-space:pre;}\n');
 
           done();
@@ -917,7 +917,7 @@ file', function (done) {
 
           expect(styleBrokenBldExistsBefore).to.be.false;
 
-          expect(styleBrokenCss).to.include('body::before{color:red;content:\'Message:\\A     ');
+          expect(styleBrokenCss).to.include('body::before{background-color:white;color:red;content:\'Message:\\A     ');
           expect(styleBrokenCss).to.include('broken-partial.styl:1:9\\A    1| @import \\\'missing/partial\\\'\\A --------------^\\A    2| \\A \\A failed to locate @import file missing/partial.styl\\A \\A Details:\\A     lineno: 1\\A     column: 9\\A     filename: ');
           expect(styleBrokenCss).to.include('broken-partial.styl\\A     stylusStack: \\A \';white-space:pre;}\n');
 

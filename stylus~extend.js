@@ -279,7 +279,8 @@ function handleError(err) {
   errorForBrowserInjection = errorForBrowserInjection.replace(/\\/g, '/'); // Render Windows file paths.
   errorForBrowserInjection = errorForBrowserInjection.replace(/\n/g, '\\A '); // Render line feeds.
   errorForBrowserInjection = errorForBrowserInjection.replace(/'/g, '\\\''); // Escape internal single-quotes.
-  errorForBrowserInjection = 'body::before{color:red;content:\'' + errorForBrowserInjection + '\';white-space:pre;}\n';
+  errorForBrowserInjection = 'body::before{background-color:white;color:red;content:\'' + errorForBrowserInjection +
+    '\';white-space:pre;}\n';
 
   const cwd = global.rootDir;
   const vPath = (vinylPath.slice(0, vinylPath.lastIndexOf('.')) + '.css').replace(cwd, '');

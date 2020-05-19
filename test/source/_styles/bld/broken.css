@@ -1,1 +1,1 @@
-body::before{color:red;content:'Message:\A     /Users/ee/Sites/Vagrant/Focal64/VHosts/electric-eloquence/fp-stylus/test/source/_styles/src/broken/broken.styl:3:1\A    1| body\A    2| color: black\A    3| \A ------^\A \A expected "indent", got "eos"\A ';white-space:pre;}
+body::before{background-color:white;color:red;content:'Message:\A     /Users/ee/Sites/Vagrant/Focal64/VHosts/electric-eloquence/fp-stylus/test/source/_styles/src/broken/broken.styl:3:1\A    1| body\A    2| color: black\A    3| \A ------^\A \A expected "indent", got "eos"\A ';white-space:pre;}
