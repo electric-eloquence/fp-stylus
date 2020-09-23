@@ -60,7 +60,7 @@
     "chai": "4.x",
     "coveralls": "3.x",
     "eslint": "6.x",
-    "fepper": "0.37.1-rc.0",
+    "fepper": "*",
     "fepper-utils": "*",
     "fs-extra": "^8.1.0",
     "gulp": "https://github.com/electric-eloquence/gulp/tarball/v3-lts",
