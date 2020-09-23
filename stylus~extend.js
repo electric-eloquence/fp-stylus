@@ -23,8 +23,7 @@ if (pref.stylus.linenos !== false) {
   pref.stylus.linenos = true;
 }
 
-const cssBldDir = conf.ui.paths.source.cssBld;
-const cssSrcDir = conf.ui.paths.source.cssSrc;
+const cssBldDir = conf.ui.paths.source.cssBld; // Do not save .cssSrc because it might be overridden for tests.
 const variablesStylPath = conf.ui.paths.source.jsSrc + '/variables.styl';
 let vinylPath; // Defined in streamUntouched() to be used in handleError().
 
@@ -121,7 +120,13 @@ function diffThenComment(cb) {
     return;
   }
 
-  const stylDir = `${cssSrcDir}/stylus`;
+  const stylDir = `${conf.ui.paths.source.cssSrc}/stylus`;
+
+  if (!fs.existsSync(stylDir)) {
+    cb();
+    return;
+  }
+
   const stylFiles = fs.readdirSync(stylDir);
   let i = stylFiles.length;
 
@@ -175,7 +180,7 @@ function diffThenComment(cb) {
               const cssFileBld = `${cssBldDir}/${stylFileObj.name}.css`;
               const cssFileBldExists = fs.existsSync(cssFileBld);
               // Declare tmp file for diffing.
-              const cssFileTmp = `${cssSrcDir}/.tmp/${stylFileObj.name}.css`;
+              const cssFileTmp = `${conf.ui.paths.source.cssSrc}/.tmp/${stylFileObj.name}.css`;
               let cssFileTmpStr = '';
 
               // If cssFileBld does not exist (quite possibly on a fresh install where it isn't version controlled),
@@ -314,7 +319,7 @@ gulp.task('stylus', function () {
     };
   }
 
-  return gulp.src(cssSrcDir + '/stylus/*.styl')
+  return gulp.src(conf.ui.paths.source.cssSrc + '/stylus/*.styl')
     .pipe(sourcemapsInit())
     .pipe(gulpStylus(pref.stylus))
     .on('error', handleError)
@@ -358,7 +363,7 @@ gulp.task('stylus:frontend-copy', function (cb) {
 gulp.task('stylus:no-comment', function () {
   const prefStylusClone = Object.assign({}, pref.stylus, {linenos: false});
 
-  return gulp.src(cssSrcDir + '/stylus/*.styl')
+  return gulp.src(conf.ui.paths.source.cssSrc + '/stylus/*.styl')
     .pipe(streamUntouched())
     .pipe(gulpStylus(prefStylusClone))
     .on('error', handleError)
@@ -374,7 +379,7 @@ gulp.task('stylus:watch', function () {
   }
 
   // Return the watcher so it can be closed after testing.
-  return gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus']);
+  return gulp.watch('stylus/**/*', {cwd: conf.ui.paths.source.cssSrc}, ['stylus']);
 });
 
 gulp.task('stylus:watch-no-comment', function () {
@@ -384,7 +389,7 @@ gulp.task('stylus:watch-no-comment', function () {
   }
 
   // Return the watcher so it can be closed after testing.
-  return gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus:no-comment']);
+  return gulp.watch('stylus/**/*', {cwd: conf.ui.paths.source.cssSrc}, ['stylus:no-comment']);
 });
 
 gulp.task('stylus:watch-write-tmp', function () {
@@ -394,17 +399,17 @@ gulp.task('stylus:watch-write-tmp', function () {
   }
 
   // Return the watcher so it can be closed after testing.
-  return gulp.watch('stylus/**/*', {cwd: cssSrcDir}, ['stylus:write-tmp', 'stylus']);
+  return gulp.watch('stylus/**/*', {cwd: conf.ui.paths.source.cssSrc}, ['stylus:write-tmp', 'stylus']);
 });
 
 // This outputs tmp files without line comments to check for modifications to Stylus code.
 gulp.task('stylus:write-tmp', function () {
-  return gulp.src(cssSrcDir + '/stylus/*.styl')
+  return gulp.src(conf.ui.paths.source.cssSrc + '/stylus/*.styl')
     .pipe(gulpStylus({
       linenos: false
     }))
     .on('error', function () /* istanbul ignore next */ {this.emit('end');})
-    .pipe(gulp.dest(`${cssSrcDir}/.tmp`));
+    .pipe(gulp.dest(`${conf.ui.paths.source.cssSrc}/.tmp`));
 });
 
 gulp.task('stylus:help', function (cb) {
@@ -431,9 +436,9 @@ Tasks:
   cb();
 });
 
-if (fs.existsSync(cssSrcDir + '/broken')) {
+if (fs.existsSync(conf.ui.paths.source.cssSrc + '/broken')) {
   gulp.task('stylus:test-broken', function () {
-    return gulp.src(cssSrcDir + '/broken/broken.styl')
+    return gulp.src(conf.ui.paths.source.cssSrc + '/broken/broken.styl')
       .pipe(streamUntouched())
       .pipe(gulpStylus(pref.stylus))
       .on('error', handleError)
@@ -441,7 +446,7 @@ if (fs.existsSync(cssSrcDir + '/broken')) {
   });
 
   gulp.task('stylus:test-broken-partial', function () {
-    return gulp.src(cssSrcDir + '/broken/broken-partial.styl')
+    return gulp.src(conf.ui.paths.source.cssSrc + '/broken/broken-partial.styl')
       .pipe(streamUntouched())
       .pipe(gulpStylus(pref.stylus))
       .on('error', handleError)

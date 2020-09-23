@@ -1,7 +1,7 @@
 'use strict';
 
 const fs = require('fs-extra');
-const {basename, dirname, extname} = require('path');
+const {basename, dirname, extname, normalize} = require('path');
 
 const {expect} = require('chai');
 
@@ -923,6 +923,33 @@ file', function (done) {
 
           done();
         }
+      );
+    });
+
+    // The following tests must run last.
+    it('exits gracefully if `stylus` directory is missing', function (done) {
+      global.conf.ui.paths.source.cssSrc = normalize(`${conf.ui.paths.source.cssSrc}/../missing-stylus-dir`);
+
+      global.gulp.runSeq(
+        'stylus',
+        'stylus:diff-then-comment',
+        'stylus:frontend-copy',
+        'stylus:no-comment',
+        'stylus:write-tmp',
+        done
+      );
+    });
+
+    it('exits gracefully if `.styl` files are missing', function (done) {
+      global.conf.ui.paths.source.cssSrc = normalize(`${conf.ui.paths.source.cssSrc}/../missing-styl-files`);
+
+      global.gulp.runSeq(
+        'stylus',
+        'stylus:diff-then-comment',
+        'stylus:frontend-copy',
+        'stylus:no-comment',
+        'stylus:write-tmp',
+        done
       );
     });
   });
