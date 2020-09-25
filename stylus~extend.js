@@ -164,7 +164,7 @@ function diffThenComment(cb) {
     if (stylFileObj.ext !== '.styl') {
       /* istanbul ignore if */
       if (i === 0) {
-        cb()
+        cb();
         return;
       }
 
