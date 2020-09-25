@@ -969,5 +969,18 @@ file', function (done) {
         done
       );
     });
+
+    it('exits gracefully if `.styl` file is empty', function (done) {
+      global.conf.ui.paths.source.cssSrc = normalize(`${conf.ui.paths.source.cssSrc}/../grandparent-of-empty-styl`);
+
+      global.gulp.runSeq(
+        'stylus',
+        'stylus:diff-then-comment',
+        'stylus:frontend-copy',
+        'stylus:no-comment',
+        'stylus:write-tmp',
+        done
+      );
+    });
   });
 });

@@ -142,6 +142,7 @@ function diffThenComment(cb) {
     if (!fs.existsSync(stylFile)) {
       if (i === 0) {
         cb();
+        return;
       }
 
       continue;
@@ -152,6 +153,7 @@ function diffThenComment(cb) {
     if (!stat.isFile()) {
       if (i === 0) {
         cb();
+        return;
       }
 
       continue;
@@ -162,7 +164,8 @@ function diffThenComment(cb) {
     if (stylFileObj.ext !== '.styl') {
       /* istanbul ignore if */
       if (i === 0) {
-        cb();
+        cb()
+        return;
       }
 
       continue;
@@ -179,6 +182,11 @@ function diffThenComment(cb) {
             if (err) {
               /* istanbul ignore next */
               utils.error(err);
+
+              /* istanbul ignore next */
+              if (iteration === 0) {
+                cb();
+              }
             }
             else {
               // Declare bld file.
@@ -209,11 +217,6 @@ function diffThenComment(cb) {
               // Exit if there has been no change. This is the case for users who only edit bld css and do not modify
               // Stylus files.
               if (cssFileTmpStr === cssNew) {
-                /* istanbul ignore if */
-                if (iteration === 0) {
-                  cb();
-                }
-
                 return;
               }
 
@@ -228,6 +231,7 @@ function diffThenComment(cb) {
                 stat = fs.statSync(cssFileBld);
               }
 
+              /* istanbul ignore else */
               if (!cssFileBldExists || stat.isFile()) {
                 let cssOld = '';
 
@@ -236,6 +240,7 @@ function diffThenComment(cb) {
                 }
 
                 // Only overwrite bld css if tmp css and bld css differ.
+                /* istanbul ignore else */
                 if (cssNew !== cssOld) {
                   const style = stylus(stylFileStr, prefStylusClone);
 
@@ -263,21 +268,17 @@ function diffThenComment(cb) {
                     })(iteration)
                   );
                 }
+                else if (iteration === 0) {
+                  cb();
+                }
               }
-            }
-
-            /* istanbul ignore if */
-            if (iteration === 0) {
-              cb();
+              else if (iteration === 0) {
+                cb();
+              }
             }
           };
         })(i)
       );
-
-    /* istanbul ignore if */
-    if (i === 0) {
-      cb();
-    }
   }
 }
 
