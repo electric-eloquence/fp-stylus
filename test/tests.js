@@ -952,5 +952,22 @@ file', function (done) {
         done
       );
     });
+
+    it('exits gracefully if `stylus` directory is empty', function (done) {
+      const emptyStylusParent = global.conf.ui.paths.source.cssSrc =
+        normalize(`${conf.ui.paths.source.cssSrc}/../parent-of-empty-stylus`);
+
+      fs.ensureDirSync(emptyStylusParent);
+      fs.ensureDirSync(emptyStylusParent + '/stylus');
+
+      global.gulp.runSeq(
+        'stylus',
+        'stylus:diff-then-comment',
+        'stylus:frontend-copy',
+        'stylus:no-comment',
+        'stylus:write-tmp',
+        done
+      );
+    });
   });
 });

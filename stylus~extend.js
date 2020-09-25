@@ -130,6 +130,11 @@ function diffThenComment(cb) {
   const stylFiles = fs.readdirSync(stylDir);
   let i = stylFiles.length;
 
+  if (i === 0) {
+    cb();
+    return;
+  }
+
   while (i--) {
     const stylFile = `${stylDir}/${stylFiles[i]}`;
 
