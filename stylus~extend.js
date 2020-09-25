@@ -194,7 +194,7 @@ function diffThenComment(cb) {
               const cssFileBldExists = fs.existsSync(cssFileBld);
               // Declare tmp file for diffing.
               const cssFileTmp = `${conf.ui.paths.source.cssSrc}/.tmp/${stylFileObj.name}.css`;
-              let cssFileTmpStr = '';
+              let cssFileTmpStr;
 
               // If cssFileBld does not exist (quite possibly on a fresh install where it isn't version controlled),
               // we need to render and write it. In this case, keep cssFileTmpStr empty even if cssFileTmp exists.
@@ -217,6 +217,11 @@ function diffThenComment(cb) {
               // Exit if there has been no change. This is the case for users who only edit bld css and do not modify
               // Stylus files.
               if (cssFileTmpStr === cssNew) {
+                /* istanbul ignore if */
+                if (iteration === 0) {
+                  cb();
+                }
+
                 return;
               }
 
