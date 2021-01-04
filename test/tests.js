@@ -47,7 +47,7 @@ const sourcemap = `${styleBld}.map`;
 const stylusHtml = 'html\n  font-size: 62.5%\n';
 
 function rmSrcCssBldFiles(files) {
-  for (let file of files) {
+  for (const file of files) {
     if (extname(file) === '.css') {
       fs.unlinkSync(`${srcCssBldDir}/${file}`);
     }
@@ -55,7 +55,7 @@ function rmSrcCssBldFiles(files) {
 }
 
 function rmSrcCssMapFiles(files) {
-  for (let file of files) {
+  for (const file of files) {
     if (extname(file) === '.map') {
       fs.unlinkSync(`${srcCssBldDir}/${file}`);
     }
