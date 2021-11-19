@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "accord": "^0.30.0",
+    "fs-extra": "^8.1.0",
     "gulp-sourcemaps": "^2.6.5",
     "lodash.assign": "^4.2.0",
     "plugin-error": "^1.0.1",
@@ -62,7 +63,6 @@
     "eslint": "7.x",
     "fepper": "*",
     "fepper-utils": "*",
-    "fs-extra": "^8.1.0",
     "gulp": "https://github.com/electric-eloquence/gulp/tarball/v3-lts",
     "husky": "4.x",
     "mocha": "8.x",
